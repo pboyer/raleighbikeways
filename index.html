@@ -93,35 +93,16 @@
             width: 300px;
         }
 
-        #greenways {
-            background: #008800;
+        #existing {
+            background: #A14A76;
         }
 
-        #bufferBikeLanes {
-            background: #FFAA00;
+        #design {
+            background: #FBC2B5;
         }
-
-        #bikeLanes {
-            background: #00C5FF;
-        }
-
-        #sharrows {
-            background: #C500FF;
-        }
-
-        #bikeLanesSharrows {
-            background: rgb(197, 161, 0);
-        }
-
-        #upcoming {
-            background: rgb(161, 0, 0);
-        }
-
-        @media (max-width: 670px) {
-            .keyEle {
-                font-size: 12px;
-                padding-top: 10px;
-            }
+    
+        #programmed {
+            background: #F786AA;
         }
     </style>
 
@@ -135,7 +116,7 @@
         <div id="title">Raleigh Bikeways</div>
         <div id="sources">
             <span>Source</span>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bikeways/FeatureServer/0">Existing bikeways</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer/0">On road bikeways</a>
             <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer/0">Greenways</a>
         </div>
     </div>
@@ -143,11 +124,9 @@
     <div id="footer">
         <div id="keyTitle">Key</div>
         <div id="key">
-            <div id="sharrows" class="keyEle">Sharrows</div>
-            <div id="bikeLanes" class="keyEle">Bike Lanes</div>
-            <div id="bufferBikeLanes" class="keyEle">Buffered Bike Lanes</div>
-            <div id="greenways" class="keyEle">Greenways</div>
-            <div id="upcoming" class="keyEle">Upcoming</div>
+            <div id="design" class="keyEle">Design</div>
+            <div id="programmed" class="keyEle">Programmed</div>
+            <div id="existing" class="keyEle">Existing</div>
         </div>
     </div>
 </body>
@@ -157,7 +136,7 @@
 
     let map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/peterboyer/cjr02dwkz09fo2ro9ffhzlj2i',
+        style: 'mapbox://styles/peterboyer/cjr49i1ql0mza2srxxtgqlpqw',
         center: [-78.638176, 35.779591],
         zoom: 12
     });
@@ -172,7 +151,6 @@
     }
 
     // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
-    let existingBikewaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bikeways/FeatureServer/0';
     let existingGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
     let onRoadBikewaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer/0';
 
@@ -185,7 +163,6 @@
     }); 
 
     // Generate the full query URL
-    let existingBikewaysQuery = `${existingBikewaysURL}/query?${queryParams}`;
     let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
     let onRoadBikewaysQuery = `${onRoadBikewaysURL}/query?${queryParams}`;
 
@@ -212,45 +189,13 @@
                 'line-width': [
                     'match',
                     ['get', 'Status'],
-                    'Design', 3,
-                    'Programmed', 2,
-                    'Existing', 1,
+                    'Design', 1.5,
+                    'Programmed', 1.5,
+                    'Existing', 1.5,
                     0
                 ]
             }
         });
-
-        // map.addSource('existing-bikeways', {
-        //     'type': 'geojson',
-        //     'data': existingBikewaysQuery
-        // })
-
-        // map.addLayer({
-        //     'id': 'existing-bikeways-layer',
-        //     'type': 'line',
-        //     'source': 'existing-bikeways',
-        //     'layout': {},
-        //     'paint': {
-        //         'line-color': [
-        //             'match',
-        //             ['get', 'FaclType'],
-        //             'Buffered Bike Lanes', '#FFAA00',
-        //             'Bike Lanes', '#00C5FF',
-        //             'Sharrows', '#C500FF',
-        //             'Bike Lanes /Sharrows', '#C500FF',
-        //             'grey'
-        //         ],
-        //         'line-width': [
-        //             'match',
-        //             ['get', 'FaclType'],
-        //             'Buffered Bike Lanes', 2,
-        //             'Bike Lanes', 2,
-        //             'Sharrows', 2,
-        //             'Bike Lanes /Sharrows', 2,
-        //             0
-        //         ]
-        //     }
-        // });
 
         map.addSource('existing-greenways', {
             'type': 'geojson',
@@ -274,9 +219,9 @@
                 'line-width': [
                     'match',
                     ['get', 'TYPE'],
-                    'Trail', 1,
-                    'Crossing', 1,
-                    'Structure', 1,
+                    'Trail', 1.5,
+                    'Crossing', 1.5,
+                    'Structure', 1.5,
                     0
                 ]
             }
