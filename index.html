@@ -1,0 +1,291 @@
+<html>
+
+<head>
+    <title>Raleigh Bikeways</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+        }
+
+        #map {
+            position: absolute;
+            top: 75px;
+            bottom: 80px;
+            width: 100%;
+        }
+
+        #header {
+            position: absolute;
+            top: 0;
+            height: 75px;
+            width: 100%;
+            background: whitesmoke;
+        }
+
+        #title {
+            display: inline-block;
+            padding: 20px;
+            font-size: 28px;
+        }
+
+        #sources {
+            float: right;
+            padding: 25px;
+        }
+
+        #sources span {
+            text-transform: uppercase;
+            color: #888;
+            font-size: 14px;
+        }
+
+        #sources a {
+            padding-left: 40px;
+            text-decoration: none;
+            color: #444;
+        }
+
+        #sources a:hover {
+            color: #000;
+        }
+
+        #footer {
+            position: absolute;
+            height: 80px;
+            bottom: 0;
+            width: 100%;
+            background: whitesmoke;
+        }
+
+        #keyTitle {
+            background: #2c2c2c;
+            height: 30px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.6em;
+            box-sizing: border-box;
+            padding: 6px;
+            font-size: 13px;
+        }
+
+        #key {
+            height: 50px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .keyEle {
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: white;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            flex-grow: 1;
+            box-sizing: border-box;
+            height: 50px;
+            width: 300px;
+        }
+
+        #greenways {
+            background: #008800;
+        }
+
+        #bufferBikeLanes {
+            background: #FFAA00;
+        }
+
+        #bikeLanes {
+            background: #00C5FF;
+        }
+
+        #sharrows {
+            background: #C500FF;
+        }
+
+        #bikeLanesSharrows {
+            background: rgb(197, 161, 0);
+        }
+
+        #upcoming {
+            background: rgb(161, 0, 0);
+        }
+
+        @media (max-width: 670px) {
+            .keyEle {
+                font-size: 12px;
+                padding-top: 10px;
+            }
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+</head>
+
+<body>
+    <div id="header">
+        <div id="title">Raleigh Bikeways</div>
+        <div id="sources">
+            <span>Source</span>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bikeways/FeatureServer/0">Existing bikeways</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer/0">Greenways</a>
+        </div>
+    </div>
+    <div id="map"></div>
+    <div id="footer">
+        <div id="keyTitle">Key</div>
+        <div id="key">
+            <div id="sharrows" class="keyEle">Sharrows</div>
+            <div id="bikeLanes" class="keyEle">Bike Lanes</div>
+            <div id="bufferBikeLanes" class="keyEle">Buffered Bike Lanes</div>
+            <div id="greenways" class="keyEle">Greenways</div>
+            <div id="upcoming" class="keyEle">Upcoming</div>
+        </div>
+    </div>
+</body>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJib3llciIsImEiOiJjanF5aHpuYXAwMGhvNDl0MmRkN3F2cHpxIn0.cdJjFtN1PHLcMZTlGC1WNg'
+
+    let map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/peterboyer/cjr02dwkz09fo2ro9ffhzlj2i',
+        center: [-78.638176, 35.779591],
+        zoom: 12
+    });
+
+    // Function to help build a query string for querying the ArcGIS REST service
+    function queryString(queryProperties) {
+        let queryString = '';
+        for (let property in queryProperties) {
+            queryString += `${property}=${queryProperties[property].toString()}&`
+        }
+        return queryString.slice(0, -1)
+    }
+
+    // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
+    let existingBikewaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bikeways/FeatureServer/0';
+    let existingGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
+    let onRoadBikewaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer/0';
+
+    // Create the query string. These are the minimum parameters needed to return valid GeoJSON of a dataset, but addtional parameters could be added to refine the query
+    let queryParams = queryString({
+        where: "1=1",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    }); 
+
+    // Generate the full query URL
+    let existingBikewaysQuery = `${existingBikewaysURL}/query?${queryParams}`;
+    let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
+    let onRoadBikewaysQuery = `${onRoadBikewaysURL}/query?${queryParams}`;
+
+    map.on('load', () => {
+        map.addSource('on-road-bikeways', {
+            'type': 'geojson',
+            'data': onRoadBikewaysQuery
+        });
+
+        map.addLayer({
+            'id': 'on-road-bikeways-layer',
+            'type': 'line',
+            'source': 'on-road-bikeways',
+            'layout': {},
+            'paint': {
+                'line-color': [
+                    'match',
+                    ['get', 'Status'],
+                    'Design', '#FBC2B5',
+                    'Programmed', '#F786AA',
+                    'Existing', '#A14A76',
+                    'grey'
+                ],
+                'line-width': [
+                    'match',
+                    ['get', 'Status'],
+                    'Design', 3,
+                    'Programmed', 2,
+                    'Existing', 1,
+                    0
+                ]
+            }
+        });
+
+        // map.addSource('existing-bikeways', {
+        //     'type': 'geojson',
+        //     'data': existingBikewaysQuery
+        // })
+
+        // map.addLayer({
+        //     'id': 'existing-bikeways-layer',
+        //     'type': 'line',
+        //     'source': 'existing-bikeways',
+        //     'layout': {},
+        //     'paint': {
+        //         'line-color': [
+        //             'match',
+        //             ['get', 'FaclType'],
+        //             'Buffered Bike Lanes', '#FFAA00',
+        //             'Bike Lanes', '#00C5FF',
+        //             'Sharrows', '#C500FF',
+        //             'Bike Lanes /Sharrows', '#C500FF',
+        //             'grey'
+        //         ],
+        //         'line-width': [
+        //             'match',
+        //             ['get', 'FaclType'],
+        //             'Buffered Bike Lanes', 2,
+        //             'Bike Lanes', 2,
+        //             'Sharrows', 2,
+        //             'Bike Lanes /Sharrows', 2,
+        //             0
+        //         ]
+        //     }
+        // });
+
+        map.addSource('existing-greenways', {
+            'type': 'geojson',
+            'data': existingGreenwaysQuery
+        });
+
+        map.addLayer({
+            'id': 'existing-greenways-layer',
+            'type': 'line',
+            'source': 'existing-greenways',
+            'layout': {},
+            'paint': {
+                'line-color': [
+                    'match',
+                    ['get', 'TYPE'],
+                    'Trail', '#A14A76',
+                    'Crossing', '#A14A76',
+                    'Structure', '#A14A76',
+                    'grey'
+                ],
+                'line-width': [
+                    'match',
+                    ['get', 'TYPE'],
+                    'Trail', 1,
+                    'Crossing', 1,
+                    'Structure', 1,
+                    0
+                ]
+            }
+        });
+
+    })
+
+
+
+</script>
+
+</html>
