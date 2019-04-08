@@ -116,8 +116,8 @@
         <div id="title">Raleigh Bikeways</div>
         <div id="sources">
             <span>Source</span>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer/0">On road bikeways</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer/0">Greenways</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer">On road bikeways</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer">Greenways</a>
         </div>
     </div>
     <div id="map"></div>
@@ -152,7 +152,7 @@
 
     // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
     let existingGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
-    let onRoadBikewaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer/0';
+    let onRoadBikewaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/OnRoad_Bike_Mapping_/FeatureServer/7';
 
     // Create the query string. These are the minimum parameters needed to return valid GeoJSON of a dataset, but addtional parameters could be added to refine the query
     let queryParams = queryString({
