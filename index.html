@@ -105,6 +105,10 @@
         #programmed {
             background: #3498DB;
         }
+
+        #citrix {
+            background: #f9423a;
+        }
     </style>
 
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
@@ -117,9 +121,10 @@
         <div id="title">Raleigh Bikeways</div>
         <div id="sources">
             <span>Sources (all from municipal data)</span>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer">Existing</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer">Programmed</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer">Greenways</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Greenways</a>
+            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
         </div>
     </div>
     <div id="map"></div>
@@ -129,6 +134,7 @@
             <div id="greenways" class="keyEle">Greenways</div>
             <div id="existing" class="keyEle">Existing (sharrows dashed)</div>
             <div id="programmed" class="keyEle">Programmed (sharrows dashed)</div>
+            <div id="citrix" class="keyEle">Citrix Cycle</div>
         </div>
     </div>
 </body>
@@ -156,6 +162,7 @@
     let existingGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
     let existingBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer/6';
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
+    let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
 
     // Create the query string. These are the minimum parameters needed to return valid GeoJSON of a dataset, but addtional parameters could be added to refine the query
     let queryParams = queryString({
@@ -169,6 +176,7 @@
     let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
+    let citrixCycleStationsQuery = `${citrixCycleStations}/query?${queryParams}`;
 
     map.on('load', () => {
         map.addSource('existing-bike-facilities', {
@@ -366,6 +374,22 @@
                     'Structure', 1.5,
                     0
                 ]
+            }
+        });
+
+        map.addSource('citrix-cycle-stations', {
+            'type': 'geojson',
+            'data': citrixCycleStationsQuery
+        });
+
+        map.addLayer({
+            'id': 'citrix-cycle-stations-layer',
+            'type': 'circle',
+            'source': 'citrix-cycle-stations',
+            'layout': {},
+            'paint': {
+                'circle-color': '#f9423a',
+                'circle-radius': 4,
             }
         });
     })
