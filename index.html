@@ -172,11 +172,19 @@
         f: "geojson"
     }); 
 
+    let citrixQuery = queryString({
+        where: "stationstatus LIKE 'open'",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
+
+
     // Generate the full query URL
     let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
-    let citrixCycleStationsQuery = `${citrixCycleStations}/query?${queryParams}`;
+    let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
 
     map.on('load', () => {
         map.addSource('existing-bike-facilities', {
