@@ -144,6 +144,7 @@
     
     const citrixColor = '#f9423a';
     const programmedFacilitiesColor = '#3498DB';
+    const greenwayColor = '#28B463';
 
 
     let map = new mapboxgl.Map({
@@ -373,9 +374,9 @@
                 'line-color': [
                     'match',
                     ['get', 'TYPE'],
-                    'Trail', '#28B463',
-                    'Crossing', '#28B463',
-                    'Structure', '#28B463',
+                    'Trail', greenwayColor,
+                    'Crossing', greenwayColor,
+                    'Structure', greenwayColor,
                     'grey'
                 ],
                 'line-width': [
@@ -385,9 +386,54 @@
                     'Crossing', 1.5,
                     'Structure', 1.5,
                     0
+                ],
+                'line-opacity': [
+                    'match',
+                    ['get', 'WIDTH_FT'],
+                    1, 0,
+                    2, 0,
+                    3, 0,
+                    4, 0,
+                    5, 0,
+                    6, 0,
+                    1
                 ]
             }
         });
+        
+        // We are using greenway width as a guess as to how bikable a section
+        // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
+        // and make it dashed
+        map.addLayer({
+            'id': 'existing-greenways-dashed-layer',
+            'type': 'line',
+            'source': 'existing-greenways',
+            'layout': {},
+            'paint': {
+                'line-color': greenwayColor,
+                'line-width': [
+                    'match',
+                    ['get', 'TYPE'],
+                    'Trail', 1.5,
+                    'Crossing', 1.5,
+                    'Structure', 1.5,
+                    0
+                ],
+                'line-opacity': [
+                    'match',
+                    ['get', 'WIDTH_FT'],
+                    1, 1,
+                    2, 1,
+                    3, 1,
+                    4, 1,
+                    5, 1,
+                    6, 1,
+                    0
+                ],
+                'line-dasharray': [1,2]
+            }
+        });
+
 
         map.addSource('citrix-cycle-stations', {
             'type': 'geojson',
