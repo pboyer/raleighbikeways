@@ -141,6 +141,10 @@
 
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJib3llciIsImEiOiJjanF5aHpuYXAwMGhvNDl0MmRkN3F2cHpxIn0.cdJjFtN1PHLcMZTlGC1WNg'
+    
+    const citrixColor = '#f9423a';
+    const programmedFacilitiesColor = '#3498DB';
+
 
     let map = new mapboxgl.Map({
         container: 'map',
@@ -285,16 +289,16 @@
                 'line-color': [
                     'match',
                     ['get', 'Type'],
-                    'Bike Lane', '#3498DB',
-                    'Bike Lane/Shared Lane Markings', '#3498DB',
-                    'Buffered Bike Lane', '#3498DB',
-                    'Buffered Bike Lane/Bike Lane', '#3498DB',
-                    'Buffered Bike Lane/Shared Lane Markings', '#3498DB',
-                    'Separated Bike Lane', '#3498DB',
-                    'Multi-Use Path', '#3498DB',
-                    // 'Neighborhood Bikeway', '#3498DB',
-                    // 'Shared Lane Markings', '#3498DB',
-                    // 'Unknown', '#3498DB',
+                    'Bike Lane', programmedFacilitiesColor,
+                    'Bike Lane/Shared Lane Markings', programmedFacilitiesColor,
+                    'Buffered Bike Lane', programmedFacilitiesColor,
+                    'Buffered Bike Lane/Bike Lane', programmedFacilitiesColor,
+                    'Buffered Bike Lane/Shared Lane Markings', programmedFacilitiesColor,
+                    'Separated Bike Lane', programmedFacilitiesColor,
+                    'Multi-Use Path', programmedFacilitiesColor,
+                    // 'Neighborhood Bikeway', programmedFacilitiesColor,
+                    // 'Shared Lane Markings', programmedFacilitiesColor,
+                    // 'Unknown', programmedFacilitiesColor,
                     'grey'
                 ],
                 'line-width': [
@@ -331,9 +335,9 @@
                     // 'Buffered Bike Lane/Shared Lane Markings', '#eee',
                     // 'Separated Bike Lane', '#eee',
                     // 'Multi-Use Path', '#eee',
-                    'Neighborhood Bikeway', '#eee',
-                    'Shared Lane Markings', '#eee',
-                    'Unknown', '#eee',
+                    'Neighborhood Bikeway', programmedFacilitiesColor,
+                    'Shared Lane Markings', programmedFacilitiesColor,
+                    'Unknown', programmedFacilitiesColor,
                     'grey'
                 ],
                 'line-width': [
@@ -396,7 +400,7 @@
             'source': 'citrix-cycle-stations',
             'layout': {},
             'paint': {
-                'circle-color': '#f9423a',
+                'circle-color': citrixColor,
                 'circle-radius': 4,
             }
         });
