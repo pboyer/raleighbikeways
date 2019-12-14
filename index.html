@@ -149,6 +149,8 @@
         zoom: 12
     });
 
+    map.addControl(new mapboxgl.NavigationControl());
+
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
         let queryString = '';
