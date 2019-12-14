@@ -178,8 +178,6 @@
 
     map.addControl(new mapboxgl.NavigationControl());
 
-    map.resize();
-
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
         let queryString = '';
@@ -423,6 +421,8 @@
                 'circle-radius': 4,
             }
         });
+
+        map.resize();
     })
 
 
