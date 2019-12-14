@@ -120,8 +120,12 @@
             height: 50px !important;
         }
 
+        .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-group {
+            margin: 0 30px 30px 0 !important;
+        }
+
         .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
-            margin: 20px 20px 0 0 !important;
+            margin: 30px 30px 0 0 !important;
         }
 
     </style>
@@ -173,6 +177,8 @@
     }),'bottom-right');
 
     map.addControl(new mapboxgl.NavigationControl());
+
+    map.resize();
 
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
