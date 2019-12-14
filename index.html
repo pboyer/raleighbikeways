@@ -159,6 +159,13 @@
         zoom: 12
     });
 
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }),'bottom-right');
+
     map.addControl(new mapboxgl.NavigationControl());
 
     // Function to help build a query string for querying the ArcGIS REST service
