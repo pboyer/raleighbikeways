@@ -109,11 +109,31 @@
         #citrix {
             background: #f9423a;
         }
+
+        .mapboxgl-ctrl-group > button{
+            width: 50px !important;
+            height: 50px !important;
+        }
+
+        .mapboxgl-ctrl-geolocate > button{
+            width: 50px !important;
+            height: 50px !important;
+        }
+
+        .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-group {
+            margin: 0 30px 30px 0 !important;
+        }
+
+        .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
+            margin: 30px 30px 0 0 !important;
+        }
+
     </style>
 
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.0/mapbox-gl.css' rel='stylesheet' />
+    
 </head>
 
 <body>
@@ -153,6 +173,15 @@
         center: [-78.638176, 35.779591],
         zoom: 12
     });
+
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }),'bottom-right');
+
+    map.addControl(new mapboxgl.NavigationControl());
 
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
@@ -450,6 +479,8 @@
                 'circle-radius': 4,
             }
         });
+
+        map.resize();
     })
 
 
