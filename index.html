@@ -13,12 +13,12 @@
         #map {
             position: absolute;
             top: 75px;
-            bottom: 80px;
+            bottom: 0px;
             width: 100%;
         }
 
         #header {
-            position: absolute;
+            position: flex;
             top: 0;
             height: 75px;
             width: 100%;
@@ -93,6 +93,37 @@
             width: 300px;
         }
 
+        #legend {
+            position: absolute;
+            margin: 10px;
+            z-index: 5;
+        }
+
+        #legend > div > i {
+            cursor: pointer;
+        }
+
+        #legend > #legend-box {
+            width: auto;
+            height: fit-content;
+            background-color: gray;
+            padding: 20px;
+            visibility: hidden;
+            font-size: 24px;
+        }
+
+        #legend-box td {
+            padding-bottom: 30px;
+            font-size: 30px;
+            padding-left: 20px;
+        }
+
+        #legend-box .legend-checkbox{
+            transform: scale(3);
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
         #existing {
             background: #eee;
             color: black;
@@ -109,7 +140,7 @@
         #citrix {
             background: #f9423a;
         }
-
+        
         .mapboxgl-ctrl-group > button{
             width: 50px !important;
             height: 50px !important;
@@ -128,12 +159,49 @@
             margin: 30px 30px 0 0 !important;
         }
 
+        .greenway-legend {
+            stroke: #28B463;
+            stroke-width: 8;
+            padding-top: 5px;
+        }
+
+        .existing-legend {
+            stroke: #eee;
+            stroke-width: 8;
+            padding-top: 5px;
+        }
+
+        .programmed-legend {
+            stroke: #3498DB;
+            stroke-width: 8;
+            padding-top: 5px;
+        }
+
+        /* Meterial Icons Styles */
+        .material-icons.md-18 { font-size: 18px; }
+        .material-icons.md-24 { font-size: 24px; }
+        .material-icons.md-36 { font-size: 36px; }
+        .material-icons.md-48 { font-size: 48px; }
+        .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+        .material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+        .material-icons.md-light { color: rgba(255, 255, 255, 1); }
+        .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                        supported by Chrome, Opera and Firefox */
+        }
     </style>
 
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.0/mapbox-gl.css' rel='stylesheet' />
-    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 
 <body>
@@ -147,8 +215,112 @@
             <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
         </div>
     </div>
+    <div id="legend">
+        <div onclick="toggleLegend()">
+            <i class="material-icons md-48 md-light noselect">layers</i>
+        </div>
+        <div id="legend-box">
+            <table>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-layer" checked>Greenways<br>        
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="greenway-legend">
+                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="greenway-legend">
+                            <line x1="0" y1="5" x2="20" y2="5"/>
+                            <line x1="40" y1="5" x2="60" y2="5"/>
+                            <line x1="80" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="programmed-legend">
+                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="programmed-legend">
+                            <line x1="0" y1="5" x2="20" y2="5"/>
+                            <line x1="40" y1="5" x2="60" y2="5"/>
+                            <line x1="80" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-layer" checked>Bikeways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="existing-legend">
+                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="existing-legend">
+                            <line x1="0" y1="5" x2="20" y2="5"/>
+                            <line x1="40" y1="5" x2="60" y2="5"/>
+                            <line x1="80" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
+                    </td>
+                    <td>
+                        <svg height="24" width="24" class="existing-legend">
+                                <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="red" />
+                        </svg>
+                    </td>
+                </tr>
+            </table>
+            <!-- <div id="legend-checkboxes">
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-layer" checked>Greenways<br>
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-layer" checked>Bikeways<br>
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                <input type="checkbox" onchange="legendToggleLayer(this)" name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br></div>
+            <div id="legend-lines">
+                <svg height="10" width="100" class="greenway-legend">
+                    <line x1="0" y1="5" x2="100" y2="5"/>
+                </svg>
+                <br>
+                <svg height="10" width="100" class="greenway-legend">
+                    <line x1="0" y1="5" x2="20" y2="5"/>
+                    <line x1="40" y1="5" x2="60" y2="5"/>
+                    <line x1="80" y1="5" x2="100" y2="5"/>
+                </svg>
+            </div> -->
+        </div>
+    </div>
     <div id="map"></div>
-    <div id="footer">
+    <!-- <div id="footer">
         <div id="keyTitle">Key</div>
         <div id="key">
             <div id="greenways" class="keyEle">Greenways</div>
@@ -156,15 +328,26 @@
             <div id="programmed" class="keyEle">Programmed (sharrows dashed)</div>
             <div id="citrix" class="keyEle">Citrix Cycle</div>
         </div>
-    </div>
+    </div> -->
 </body>
 
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJib3llciIsImEiOiJjanF5aHpuYXAwMGhvNDl0MmRkN3F2cHpxIn0.cdJjFtN1PHLcMZTlGC1WNg'
     
+
     const citrixColor = '#f9423a';
     const programmedFacilitiesColor = '#3498DB';
     const greenwayColor = '#28B463';
+
+    const layers = {
+        EXISTING: "existing-bike-facilities-layer",
+        EXISITING_DASHED: "existing-bike-facilities-dashed-layer",
+        PROGRAMMED: "programmed-bike-facilities-layer",
+        PROGRAMMED_DASHED: "programmed-bike-facilities-dashed-layer",
+        GREENWAY: "existing-greenways-layer",
+        GREENWAY_DASHED: "existing-greenways-dashed-layer",
+        CITRIX: 'citrix-cycle-stations-layer',
+    }
 
 
     let map = new mapboxgl.Map({
@@ -213,7 +396,6 @@
         f: "geojson"
     });
 
-
     // Generate the full query URL
     let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
@@ -227,7 +409,7 @@
         });
 
         map.addLayer({
-            'id': 'existing-bike-facilities-layer',
+            'id': layers.EXISTING,
             'type': 'line',
             'source': 'existing-bike-facilities',
             'layout': {},
@@ -266,7 +448,7 @@
         });
 
         map.addLayer({
-            'id': 'existing-bike-facilities-dashed-layer',
+            'id': layers.EXISITING_DASHED,
             'type': 'line',
             'source': 'existing-bike-facilities',
             'layout': {},
@@ -311,7 +493,7 @@
         });
 
         map.addLayer({
-            'id': 'programmed-bike-facilities-layer',
+            'id': layers.PROGRAMMED,
             'type': 'line',
             'source': 'programmed-bike-facilities',
             'layout': {},
@@ -350,7 +532,7 @@
         });
 
         map.addLayer({
-            'id': 'programmed-bike-facilities-dashed-layer',
+            'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
             'source': 'programmed-bike-facilities',
             'layout': {},
@@ -395,7 +577,7 @@
         });
 
         map.addLayer({
-            'id': 'existing-greenways-layer',
+            'id': layers.GREENWAY,
             'type': 'line',
             'source': 'existing-greenways',
             'layout': {},
@@ -434,7 +616,7 @@
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
         // and make it dashed
         map.addLayer({
-            'id': 'existing-greenways-dashed-layer',
+            'id': layers.GREENWAY_DASHED,
             'type': 'line',
             'source': 'existing-greenways',
             'layout': {},
@@ -470,7 +652,7 @@
         });
 
         map.addLayer({
-            'id': 'citrix-cycle-stations-layer',
+            'id': layers.CITRIX,
             'type': 'circle',
             'source': 'citrix-cycle-stations',
             'layout': {},
@@ -481,10 +663,22 @@
         });
 
         map.resize();
-    })
+    });
 
+    function legendToggleLayer(ele) {
+        var layerName = ele.name;
+        var visibilityState = ele.checked ? 'visible' : 'none';
 
+        map.setLayoutProperty(layerName,'visibility',visibilityState);
+    }
 
+    function toggleLegend() {
+        var legendBox = document.getElementById("legend-box");
+        var isVisible = legendBox.style.visibility == 'visible';
+        var newVisibilityState = isVisible ? 'hidden' : 'visible';
+
+        legendBox.style.visibility = newVisibilityState;
+    }
 </script>
 
 </html>
