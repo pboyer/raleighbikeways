@@ -20,30 +20,44 @@ body {
     background: whitesmoke;
 }
 
+#info-icon {
+    float: right;
+    cursor: pointer;
+    color: #444;
+    padding: 17px;
+}
+
+#info-box {
+    position: relative;
+    background-color: #2c2c2c;
+    top: 150px;
+    margin: 0 auto;
+    width: 60%;
+    z-index: 10;
+    padding: 20px;
+}
+
+
 #title {
     display: inline-block;
     padding: 20px;
     font-size: 28px;
 }
 
-#sources {
-    float: right;
-    padding: 25px;
-}
-
-#sources span {
-    text-transform: uppercase;
-    color: #888;
-    font-size: 14px;
+#info-box {
+    color: white;
 }
 
 #sources a {
-    padding-left: 10px;
-    text-decoration: none;
-    color: #444;
+    padding-left: 24px;
+    color: white;
 }
 
-#sources a:hover {
+#info-box a {
+    color: white;
+}
+
+#info-box a:hover {
     color: #000;
 }
 

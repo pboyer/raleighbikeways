@@ -12,12 +12,27 @@
 <body>
     <div id="header">
         <div id="title">Raleigh Bikeways</div>
-        <div id="sources">
-            <span>Sources (all from municipal data)</span>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Greenways</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
+        <div id=info-icon onclick="toggleInfo()"><i class="material-icons md-36">info</i></div>
+        <div id="info-box" style="visibility: hidden;">
+            <div id="about">
+                <h2>Raleigh Bikeways</h2>
+                <span>This is a community built app to help you get around Raleigh while biking.  
+                    The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank" style="color: white;">Github</a>
+                </span>
+            </div>
+            <br>
+            <div id="sources">
+                <h2>Sources (all from municipal data)</h2>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing Raleigh Bike Infrastructure</a>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed Raleigh Bike Infrastructure</a>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Raleigh Greenways</a>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
+                <br>
+            </div>
         </div>
     </div>
     <div id="legend">
@@ -457,6 +472,14 @@
         var newVisibilityState = isVisible ? 'hidden' : 'visible';
 
         legendBox.style.visibility = newVisibilityState;
+    }
+
+    function toggleInfo() {
+        var infoBox = document.getElementById("info-box");
+        var isVisible = infoBox.style.visibility == 'visible';
+        var newVisibilityState = isVisible ? 'hidden' : 'visible';
+
+        infoBox.style.visibility = newVisibilityState;
     }
 </script>
 
