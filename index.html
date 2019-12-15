@@ -2,116 +2,9 @@
 
 <head>
     <title>Raleigh Bikeways</title>
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Lato', sans-serif;
-        }
-
-        #map {
-            position: absolute;
-            top: 75px;
-            bottom: 80px;
-            width: 100%;
-        }
-
-        #header {
-            position: absolute;
-            top: 0;
-            height: 75px;
-            width: 100%;
-            background: whitesmoke;
-        }
-
-        #title {
-            display: inline-block;
-            padding: 20px;
-            font-size: 28px;
-        }
-
-        #sources {
-            float: right;
-            padding: 25px;
-        }
-
-        #sources span {
-            text-transform: uppercase;
-            color: #888;
-            font-size: 14px;
-        }
-
-        #sources a {
-            padding-left: 10px;
-            text-decoration: none;
-            color: #444;
-        }
-
-        #sources a:hover {
-            color: #000;
-        }
-
-        #footer {
-            position: absolute;
-            height: 80px;
-            bottom: 0;
-            width: 100%;
-            background: whitesmoke;
-        }
-
-        #keyTitle {
-            background: #2c2c2c;
-            height: 30px;
-            font-weight: bold;
-            text-align: center;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.6em;
-            box-sizing: border-box;
-            padding: 6px;
-            font-size: 13px;
-        }
-
-        #key {
-            height: 50px;
-            display: flex;
-            justify-content: space-evenly;
-        }
-
-        .keyEle {
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: white;
-            padding: 15px;
-            font-size: 14px;
-            font-weight: bold;
-            flex-grow: 1;
-            box-sizing: border-box;
-            height: 50px;
-            width: 300px;
-        }
-
-        #existing {
-            background: #eee;
-            color: black;
-        }
-
-        #greenways {
-            background: #28B463;
-        }
-    
-        #programmed {
-            background: #3498DB;
-        }
-
-        #citrix {
-            background: #f9423a;
-        }
-    </style>
-
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
 </head>
@@ -119,32 +12,136 @@
 <body>
     <div id="header">
         <div id="title">Raleigh Bikeways</div>
-        <div id="sources">
-            <span>Sources (all from municipal data)</span>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Greenways</a>
-            <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
+        <div id=info-icon onclick="toggleInfo()"><i class="material-icons md-36">info</i></div>
+        <div id="info-box" style="visibility: hidden;">
+            <div id="about">
+                <h2>Raleigh Bikeways</h2>
+                <span>This is a community built app to help you get around Raleigh while biking.  
+                    The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank" style="color: white;">Github</a>
+                </span>
+            </div>
+            <br>
+            <div id="sources">
+                <h2>Sources (all from municipal data)</h2>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing Raleigh Bike Infrastructure</a>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed Raleigh Bike Infrastructure</a>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Raleigh Greenways</a>
+                <br>
+                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div id="legend">
+        <div onclick="toggleLegend()">
+            <i class="material-icons md-48 md-light noselect">layers</i>
+        </div>
+        <div id="legend-box">
+            <table>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-layer" checked>Greenways<br>        
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="greenway-legend">
+                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="greenway-legend">
+                            <line x1="0" y1="5" x2="20" y2="5"/>
+                            <line x1="40" y1="5" x2="60" y2="5"/>
+                            <line x1="80" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="programmed-legend">
+                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="programmed-legend">
+                            <line x1="0" y1="5" x2="20" y2="5"/>
+                            <line x1="40" y1="5" x2="60" y2="5"/>
+                            <line x1="80" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-layer" checked>Bikeways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="existing-legend">
+                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="existing-legend">
+                            <line x1="0" y1="5" x2="20" y2="5"/>
+                            <line x1="40" y1="5" x2="60" y2="5"/>
+                            <line x1="80" y1="5" x2="100" y2="5"/>
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
+                    </td>
+                    <td>
+                        <svg height="24" width="24" class="existing-legend">
+                                <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="red" />
+                        </svg>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
     <div id="map"></div>
-    <div id="footer">
-        <div id="keyTitle">Key</div>
-        <div id="key">
-            <div id="greenways" class="keyEle">Greenways</div>
-            <div id="existing" class="keyEle">Existing (sharrows dashed)</div>
-            <div id="programmed" class="keyEle">Programmed (sharrows dashed)</div>
-            <div id="citrix" class="keyEle">Citrix Cycle</div>
-        </div>
-    </div>
 </body>
 
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJib3llciIsImEiOiJjanF5aHpuYXAwMGhvNDl0MmRkN3F2cHpxIn0.cdJjFtN1PHLcMZTlGC1WNg'
-    
-    const citrixColor = '#f9423a';
-    const programmedFacilitiesColor = '#3498DB';
-    const greenwayColor = '#28B463';
+
+    const colors = {
+        CITRIX: '#f9423a',
+        PROGRAMMED: '#3498DB',
+        GREENWAY: '#28B463',
+        EXISTING: '#EEE',
+    }
+
+    const layers = {
+        EXISTING: "existing-bike-facilities-layer",
+        EXISTING_DASHED: "existing-bike-facilities-dashed-layer",
+        PROGRAMMED: "programmed-bike-facilities-layer",
+        PROGRAMMED_DASHED: "programmed-bike-facilities-dashed-layer",
+        GREENWAY: "existing-greenways-layer",
+        GREENWAY_DASHED: "existing-greenways-dashed-layer",
+        CITRIX: 'citrix-cycle-stations-layer',
+    }
 
 
     let map = new mapboxgl.Map({
@@ -153,6 +150,15 @@
         center: [-78.638176, 35.779591],
         zoom: 12
     });
+
+    map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true
+    }),'bottom-right');
+
+    map.addControl(new mapboxgl.NavigationControl());
 
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
@@ -184,7 +190,6 @@
         f: "geojson"
     });
 
-
     // Generate the full query URL
     let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
@@ -198,7 +203,7 @@
         });
 
         map.addLayer({
-            'id': 'existing-bike-facilities-layer',
+            'id': layers.EXISTING,
             'type': 'line',
             'source': 'existing-bike-facilities',
             'layout': {},
@@ -206,13 +211,13 @@
                 'line-color': [
                     'match',
                     ['get', 'Type'],
-                    'Bike Lane', 'white',
-                    'Bike Lane/Shared Lane Markings', 'white',
-                    'Buffered Bike Lane', 'white',
-                    'Buffered Bike Lane/Bike Lane', 'white',
-                    'Buffered Bike Lane/Shared Lane Markings', 'white',
-                    'Separated Bike Lane', 'white',
-                    'Multi-Use Path', 'white',
+                    'Bike Lane', colors.EXISTING,
+                    'Bike Lane/Shared Lane Markings', colors.EXISTING,
+                    'Buffered Bike Lane', colors.EXISTING,
+                    'Buffered Bike Lane/Bike Lane', colors.EXISTING,
+                    'Buffered Bike Lane/Shared Lane Markings', colors.EXISTING,
+                    'Separated Bike Lane', colors.EXISTING,
+                    'Multi-Use Path', colors.EXISTING,
                     // 'Neighborhood Bikeway', 'green',
                     // 'Shared Lane Markings', 'aqua',
                     // 'Unknown', 'red',
@@ -237,7 +242,7 @@
         });
 
         map.addLayer({
-            'id': 'existing-bike-facilities-dashed-layer',
+            'id': layers.EXISTING_DASHED,
             'type': 'line',
             'source': 'existing-bike-facilities',
             'layout': {},
@@ -249,12 +254,12 @@
                     // 'Bike Lane/Shared Lane Markings', 'cyan',
                     // 'Buffered Bike Lane', 'magenta',
                     // 'Buffered Bike Lane/Bike Lane', 'yellow',
-                    // 'Buffered Bike Lane/Shared Lane Markings', 'white',
+                    // 'Buffered Bike Lane/Shared Lane Markings', colors.EXISTING,
                     // 'Separated Bike Lane', 'blue',
-                    'Neighborhood Bikeway', '#eee',
-                    // 'Multi-Use Path', '#eee',
-                    'Shared Lane Markings', '#eee',
-                    'Unknown', '#eee',
+                    'Neighborhood Bikeway', colors.EXISTING,
+                    // 'Multi-Use Path', colors.EXISTING,
+                    'Shared Lane Markings', colors.EXISTING,
+                    'Unknown', colors.EXISTING,
                     'grey'
                 ],
                 'line-width': [
@@ -282,7 +287,7 @@
         });
 
         map.addLayer({
-            'id': 'programmed-bike-facilities-layer',
+            'id': layers.PROGRAMMED,
             'type': 'line',
             'source': 'programmed-bike-facilities',
             'layout': {},
@@ -290,16 +295,16 @@
                 'line-color': [
                     'match',
                     ['get', 'Type'],
-                    'Bike Lane', programmedFacilitiesColor,
-                    'Bike Lane/Shared Lane Markings', programmedFacilitiesColor,
-                    'Buffered Bike Lane', programmedFacilitiesColor,
-                    'Buffered Bike Lane/Bike Lane', programmedFacilitiesColor,
-                    'Buffered Bike Lane/Shared Lane Markings', programmedFacilitiesColor,
-                    'Separated Bike Lane', programmedFacilitiesColor,
-                    'Multi-Use Path', programmedFacilitiesColor,
-                    // 'Neighborhood Bikeway', programmedFacilitiesColor,
-                    // 'Shared Lane Markings', programmedFacilitiesColor,
-                    // 'Unknown', programmedFacilitiesColor,
+                    'Bike Lane', colors.PROGRAMMED,
+                    'Bike Lane/Shared Lane Markings', colors.PROGRAMMED,
+                    'Buffered Bike Lane', colors.PROGRAMMED,
+                    'Buffered Bike Lane/Bike Lane', colors.PROGRAMMED,
+                    'Buffered Bike Lane/Shared Lane Markings', colors.PROGRAMMED,
+                    'Separated Bike Lane', colors.PROGRAMMED,
+                    'Multi-Use Path', colors.PROGRAMMED,
+                    // 'Neighborhood Bikeway', colors.PROGRAMMED,
+                    // 'Shared Lane Markings', colors.PROGRAMMED,
+                    // 'Unknown', colors.PROGRAMMED,
                     'grey'
                 ],
                 'line-width': [
@@ -321,7 +326,7 @@
         });
 
         map.addLayer({
-            'id': 'programmed-bike-facilities-dashed-layer',
+            'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
             'source': 'programmed-bike-facilities',
             'layout': {},
@@ -329,16 +334,16 @@
                 'line-color': [
                     'match',
                     ['get', 'Type'],
-                    // 'Bike Lane', '#eee',
-                    // 'Bike Lane/Shared Lane Markings', '#eee',
-                    // 'Buffered Bike Lane', '#eee',
-                    // 'Buffered Bike Lane/Bike Lane', '#eee',
-                    // 'Buffered Bike Lane/Shared Lane Markings', '#eee',
-                    // 'Separated Bike Lane', '#eee',
-                    // 'Multi-Use Path', '#eee',
-                    'Neighborhood Bikeway', programmedFacilitiesColor,
-                    'Shared Lane Markings', programmedFacilitiesColor,
-                    'Unknown', programmedFacilitiesColor,
+                    // 'Bike Lane', colors.EXISTING,
+                    // 'Bike Lane/Shared Lane Markings', colors.EXISTING,
+                    // 'Buffered Bike Lane', colors.EXISTING,
+                    // 'Buffered Bike Lane/Bike Lane', colors.EXISTING,
+                    // 'Buffered Bike Lane/Shared Lane Markings', colors.EXISTING,
+                    // 'Separated Bike Lane', colors.EXISTING,
+                    // 'Multi-Use Path', colors.EXISTING,
+                    'Neighborhood Bikeway', colors.PROGRAMMED,
+                    'Shared Lane Markings', colors.PROGRAMMED,
+                    'Unknown', colors.PROGRAMMED,
                     'grey'
                 ],
                 'line-width': [
@@ -366,7 +371,7 @@
         });
 
         map.addLayer({
-            'id': 'existing-greenways-layer',
+            'id': layers.GREENWAY,
             'type': 'line',
             'source': 'existing-greenways',
             'layout': {},
@@ -374,9 +379,9 @@
                 'line-color': [
                     'match',
                     ['get', 'TYPE'],
-                    'Trail', greenwayColor,
-                    'Crossing', greenwayColor,
-                    'Structure', greenwayColor,
+                    'Trail', colors.GREENWAY,
+                    'Crossing', colors.GREENWAY,
+                    'Structure', colors.GREENWAY,
                     'grey'
                 ],
                 'line-width': [
@@ -405,12 +410,12 @@
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
         // and make it dashed
         map.addLayer({
-            'id': 'existing-greenways-dashed-layer',
+            'id': layers.GREENWAY_DASHED,
             'type': 'line',
             'source': 'existing-greenways',
             'layout': {},
             'paint': {
-                'line-color': greenwayColor,
+                'line-color': colors.GREENWAY,
                 'line-width': [
                     'match',
                     ['get', 'TYPE'],
@@ -441,19 +446,41 @@
         });
 
         map.addLayer({
-            'id': 'citrix-cycle-stations-layer',
+            'id': layers.CITRIX,
             'type': 'circle',
             'source': 'citrix-cycle-stations',
             'layout': {},
             'paint': {
-                'circle-color': citrixColor,
+                'circle-color': colors.CITRIX,
                 'circle-radius': 4,
             }
         });
-    })
 
+        map.resize();
+    });
 
+    function legendToggleLayer(ele) {
+        var layerName = ele.name;
+        var visibilityState = ele.checked ? 'visible' : 'none';
 
+        map.setLayoutProperty(layerName,'visibility',visibilityState);
+    }
+
+    function toggleLegend() {
+        var legendBox = document.getElementById("legend-box");
+        var isVisible = legendBox.style.visibility == 'visible';
+        var newVisibilityState = isVisible ? 'hidden' : 'visible';
+
+        legendBox.style.visibility = newVisibilityState;
+    }
+
+    function toggleInfo() {
+        var infoBox = document.getElementById("info-box");
+        var isVisible = infoBox.style.visibility == 'visible';
+        var newVisibilityState = isVisible ? 'hidden' : 'visible';
+
+        infoBox.style.visibility = newVisibilityState;
+    }
 </script>
 
 </html>
