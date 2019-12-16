@@ -115,19 +115,32 @@ body {
 
 #legend-icon-container {
     width: fit-content;
+    margin: 30px;
+    position: relative;
+    z-index: 5;
 }
 
-#legend > div > i {
+#legend-icon-container > i {
     cursor: pointer;
 }
 
-#legend > #legend-box {
-    width: auto;
+#legend-box-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    top: 0px
+}
+
+#legend-box {
+    position: relative;
+    width: fit-content;
     height: fit-content;
     background-color: gray;
     padding: 10px;
-    visibility: hidden;
     font-size: 16px;
+    top: 100px;
+    margin: 0 auto;
 }
 
 #legend-box td {

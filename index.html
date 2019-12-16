@@ -13,7 +13,9 @@
 <body>
     <div id="header">
         <div id="title">Raleigh Bikeways</div>
-        <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'"><i class="material-icons md-36 noselect">info</i></div>
+        <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'">
+            <i class="material-icons md-36 noselect">info</i>
+        </div>
         <div id="info-box-container" onclick="this.style.display='none'" style="display: none;">
             <div id="info-box" onclick="event.stopPropagation()">
                 <div id="about">
@@ -38,11 +40,11 @@
             </div>
         </div>
     </div>
-    <div id="legend">
-        <div id="legend-icon-container" onclick="toggleLegend()">
-            <i class="material-icons md-48 md-light noselect">layers</i>
-        </div>
-        <div id="legend-box">
+    <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
+        <i class="material-icons md-48 md-light noselect">layers</i>
+    </div>
+    <div id="legend-box-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="legend-box" onclick="event.stopPropagation()">
             <table>
                 <tr>
                     <td>
@@ -467,14 +469,6 @@
         var visibilityState = ele.checked ? 'visible' : 'none';
 
         map.setLayoutProperty(layerName,'visibility',visibilityState);
-    }
-
-    function toggleLegend() {
-        var legendBox = document.getElementById("legend-box");
-        var isVisible = legendBox.style.visibility == 'visible';
-        var newVisibilityState = isVisible ? 'hidden' : 'visible';
-
-        legendBox.style.visibility = newVisibilityState;
     }
 </script>
 
