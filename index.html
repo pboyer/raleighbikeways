@@ -407,15 +407,13 @@
                     0
                 ],
                 'line-opacity': [
-                    'match',
-                    ['get', 'WIDTH_FT'],
-                    1, 0,
-                    2, 0,
-                    3, 0,
-                    4, 0,
-                    5, 0,
-                    6, 0,
-                    1
+                    'case',
+                    //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / natural
+                    ["all",
+                        ['>', ['get','WIDTH_FT'],6],
+                        ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
+                    ],1,
+                    0,
                 ]
             }
         });
@@ -439,15 +437,13 @@
                     0
                 ],
                 'line-opacity': [
-                    'match',
-                    ['get', 'WIDTH_FT'],
-                    1, 1,
-                    2, 1,
-                    3, 1,
-                    4, 1,
-                    5, 1,
-                    6, 1,
-                    0
+                'case',
+                    //This will only show if the width is less than 6 feet OR the path material is gravel / natural
+                    ["all",
+                        ['>', ['get','WIDTH_FT'],6],
+                        ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
+                    ],0,
+                    1,
                 ],
                 'line-dasharray': [1,2]
             }
