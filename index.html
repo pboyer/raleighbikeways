@@ -438,7 +438,7 @@
                 ],
                 'line-opacity': [
                 'case',
-                    //This will only show if the width is less than 6 feet OR the path material is gravel / natural
+                    //This will only show if the width is less than or equal to 6 feet OR the path material is gravel / natural
                     ["all",
                         ['>', ['get','WIDTH_FT'],6],
                         ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
