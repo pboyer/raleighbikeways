@@ -86,7 +86,7 @@ body {
     float: right;
     cursor: pointer;
     color: #444;
-    padding: 17px 17px 17px 13px;
+    padding: 17px 17px 17px 8px;
 }
 
 #info-box {
@@ -112,14 +112,14 @@ body {
     width: fit-content;
     float: right;
     cursor: pointer;
-    padding: 13px;
+    padding: 13px 5px 13px 5px;
 }
 
 #legend-icon-container {
     width: fit-content;
     float: right;
     cursor: pointer;
-    padding: 13px;
+    padding: 13px 5px 13px 5px;
 }
 
 #legend-icon-container > i {
