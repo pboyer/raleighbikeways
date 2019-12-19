@@ -177,6 +177,57 @@
         CITRIX: 'citrix-cycle-stations-layer',
     }
 
+    // Custom styling for the direction line
+    // Make it see through so user can see the bike infrastructure. 
+    const directionsStyling = [{
+        'id': 'directions-route-line',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+            'line-cap': 'butt',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-color': {
+                'property': 'congestion',
+                'type': 'categorical',
+                'default': '#4882c5',
+                'stops': [
+                    ['unknown', '#4882c5'],
+                    ['low', '#4882c5'],
+                    ['moderate', '#f09a46'],
+                    ['heavy', '#e34341'],
+                    ['severe', '#8b2342']
+                ]
+            },
+            'line-width': 7,
+            'line-opacity': .5
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'LineString'],
+            ['in', 'route', 'selected']
+        ]
+    }, {
+        'id': 'directions-route-line-casing',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+            'line-cap': 'round',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-color': '#2d5f99',
+            'line-width': 12,
+            'line-opacity': .5
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'LineString'],
+            ['in', 'route', 'selected']
+        ]
+    }];
+
 
     let map = new mapboxgl.Map({
         container: 'map',
@@ -243,6 +294,7 @@
     const directionContol = new MapboxDirections({
         accessToken: mapboxgl.accessToken,
         profile: "mapbox/cycling",
+        styles: directionsStyling,
         controls: {
             profileSwitcher: false,
         }
