@@ -86,7 +86,7 @@ body {
     float: right;
     cursor: pointer;
     color: #444;
-    padding: 17px 17px 17px 0;
+    padding: 17px 17px 17px 13px;
 }
 
 #info-box {
@@ -110,16 +110,16 @@ body {
 
 #direction-icon-container {
     width: fit-content;
-    margin: 30px;
-    position: relative;
-    z-index: 5;
+    float: right;
+    cursor: pointer;
+    padding: 13px;
 }
 
 #legend-icon-container {
     width: fit-content;
-    margin: 30px;
-    position: relative;
-    z-index: 5;
+    float: right;
+    cursor: pointer;
+    padding: 13px;
 }
 
 #legend-icon-container > i {

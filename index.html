@@ -30,6 +30,12 @@
         <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'">
             <i class="material-icons md-36 noselect">info</i>
         </div>
+        <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
+            <i class="material-icons md-48 noselect">layers</i>
+        </div>
+        <div id="direction-icon-container" onclick="toggleDirections()">
+            <i class="material-icons md-48 noselect">navigation</i>
+        </div>
         <div id="info-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
             <div id="info-box" class="modal" onclick="event.stopPropagation()">
                 <div id="about">
@@ -58,12 +64,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
-        <i class="material-icons md-48 md-light noselect">layers</i>
-    </div>
-    <div id="direction-icon-container" onclick="toggleDirections()">
-        <i class="material-icons md-48 md-light noselect">navigation</i>
     </div>
     <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
         <div id="legend-box" class="modal" onclick="event.stopPropagation()">
@@ -517,7 +517,7 @@
             map.removeControl(directionContol);
             showingDirections = false;
         } else {
-            map.addControl(directionContol, 'bottom-left');
+            map.addControl(directionContol, 'top-left');
             showingDirections = true;
         }
     }
