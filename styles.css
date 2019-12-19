@@ -145,6 +145,18 @@ body {
     cursor: pointer;
 }
 
+#direction-buttons {
+    position: relative;
+    z-index: 5;
+    margin-top: 35vh;
+    width: fit-content;
+    float: right;
+}
+
+#direction-buttons > i {
+    margin: 15px 30px 15px 30px;
+}
+
 #existing {
     background: #eee;
     color: black;

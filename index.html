@@ -65,6 +65,11 @@
             </div>
         </div>
     </div>
+    <div id="direction-buttons" style="display: none;">
+        <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
+        <br>
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">swap_horizontal_circle</i>
+    </div>
     <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
         <div id="legend-box" class="modal" onclick="event.stopPropagation()">
             <table>
@@ -290,6 +295,7 @@
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
 
     let showingDirections = false;
+    let showingDirectionsSection = true;
 
     const directionContol = new MapboxDirections({
         accessToken: mapboxgl.accessToken,
@@ -297,7 +303,7 @@
         styles: directionsStyling,
         controls: {
             profileSwitcher: false,
-        }
+        },
     })
 
 
@@ -576,12 +582,26 @@
         if (showingDirections) {
             map.removeControl(directionContol);
             showingDirections = false;
+            document.getElementById('direction-buttons').style.display = 'none';
         } else {
             map.addControl(directionContol, 'top-left');
             if (lastFoundPosition) {
                 directionContol.setOrigin(lastFoundPosition);
             }
             showingDirections = true;
+            document.getElementById('direction-buttons').style.display = 'block';
+        }
+    }
+
+    function toggleDirectionSection() {
+        if (showingDirectionsSection) {
+            document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'none';
+            directionContol.interactive(false);
+            showingDirectionsSection = false;
+        } else {
+            document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'block';
+            directionContol.interactive(true);
+            showingDirectionsSection = true;
         }
     }
 
