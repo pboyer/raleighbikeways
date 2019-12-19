@@ -86,7 +86,7 @@ body {
     float: right;
     cursor: pointer;
     color: #444;
-    padding: 17px 17px 17px 0;
+    padding: 17px 8px 17px 8px;
 }
 
 #info-box {
@@ -108,11 +108,18 @@ body {
     color: #000;
 }
 
+#direction-icon-container {
+    width: fit-content;
+    float: right;
+    cursor: pointer;
+    padding: 17px 8px 17px 8px;
+}
+
 #legend-icon-container {
     width: fit-content;
-    margin: 30px;
-    position: relative;
-    z-index: 5;
+    float: right;
+    cursor: pointer;
+    padding: 17px 8px 17px 8px;
 }
 
 #legend-icon-container > i {
@@ -136,6 +143,18 @@ body {
     transform: scale(1.5);
     margin-right: 20px;
     cursor: pointer;
+}
+
+#direction-buttons {
+    position: relative;
+    z-index: 5;
+    margin-top: 35vh;
+    width: fit-content;
+    float: right;
+}
+
+#direction-buttons > i {
+    margin: 15px 30px 15px 30px;
 }
 
 #existing {

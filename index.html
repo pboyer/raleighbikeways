@@ -7,7 +7,12 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css"
+        type="text/css" />
 
     <!-- Flavicon Metadata -->
     <link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon.png">
@@ -25,109 +30,129 @@
         <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'">
             <i class="material-icons md-36 noselect">info</i>
         </div>
+        <div id="direction-icon-container" onclick="toggleDirections()">
+            <i class="material-icons md-36 noselect">navigation</i>
+        </div>
+        <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
+            <i class="material-icons md-36 noselect">layers</i>
+        </div>
         <div id="info-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
             <div id="info-box" class="modal" onclick="event.stopPropagation()">
                 <div id="about">
                     <h2>Raleigh Bikeways</h2>
-                    <span>This is a community built app to help you get around Raleigh while biking.  
-                        The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank" style="color: white;">Github</a>
+                    <span>This is a community built app to help you get around Raleigh while biking.
+                        The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank"
+                            style="color: white;">Github</a>
                     </span>
                 </div>
                 <br>
                 <div id="sources">
                     <h2>Sources (all from municipal data)</h2>
                     <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing Raleigh Bike Infrastructure</a>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer"
+                        target="_blank">Existing Raleigh Bike Infrastructure</a>
                     <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed Raleigh Bike Infrastructure</a>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer"
+                        target="_blank">Programmed Raleigh Bike Infrastructure</a>
                     <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Raleigh Greenways</a>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer"
+                        target="_blank">Raleigh Greenways</a>
                     <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer"
+                        target="_blank">Citrix Cycle Stations</a>
                     <br>
                 </div>
             </div>
         </div>
     </div>
-    <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
-        <i class="material-icons md-48 md-light noselect">layers</i>
+    <div id="direction-buttons" style="display: none;">
+        <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
+        <br>
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">swap_horizontal_circle</i>
     </div>
     <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
         <div id="legend-box" class="modal" onclick="event.stopPropagation()">
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-layer" checked>Greenways<br>        
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="existing-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
-                            <line x1="0" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
-                            <line x1="0" y1="5" x2="20" y2="5"/>
-                            <line x1="40" y1="5" x2="60" y2="5"/>
-                            <line x1="80" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
-                            <line x1="0" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
-                            <line x1="0" y1="5" x2="20" y2="5"/>
-                            <line x1="40" y1="5" x2="60" y2="5"/>
-                            <line x1="80" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-layer" checked>Bikeways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="existing-bike-facilities-layer" checked>Bikeways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="existing-legend">
-                            <line x1="0" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="existing-legend">
-                            <line x1="0" y1="5" x2="20" y2="5"/>
-                            <line x1="40" y1="5" x2="60" y2="5"/>
-                            <line x1="80" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
                     </td>
                     <td>
                         <svg height="24" width="24" class="existing-legend">
-                                <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="red" />
+                            <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="red" />
                         </svg>
                     </td>
                 </tr>
@@ -157,6 +182,57 @@
         CITRIX: 'citrix-cycle-stations-layer',
     }
 
+    // Custom styling for the direction line
+    // Make it see through so user can see the bike infrastructure. 
+    const directionsStyling = [{
+        'id': 'directions-route-line',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+            'line-cap': 'butt',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-color': {
+                'property': 'congestion',
+                'type': 'categorical',
+                'default': '#4882c5',
+                'stops': [
+                    ['unknown', '#4882c5'],
+                    ['low', '#4882c5'],
+                    ['moderate', '#f09a46'],
+                    ['heavy', '#e34341'],
+                    ['severe', '#8b2342']
+                ]
+            },
+            'line-width': 7,
+            'line-opacity': .5
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'LineString'],
+            ['in', 'route', 'selected']
+        ]
+    }, {
+        'id': 'directions-route-line-casing',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+            'line-cap': 'round',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-color': '#2d5f99',
+            'line-width': 12,
+            'line-opacity': .5
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'LineString'],
+            ['in', 'route', 'selected']
+        ]
+    }];
+
 
     let map = new mapboxgl.Map({
         container: 'map',
@@ -165,12 +241,20 @@
         zoom: 12
     });
 
-    map.addControl(new mapboxgl.GeolocateControl({
+    const geolocateControl = new mapboxgl.GeolocateControl({
         positionOptions: {
             enableHighAccuracy: true
         },
         trackUserLocation: true
-    }),'bottom-right');
+    })
+
+    let lastFoundPosition;
+
+    geolocateControl.on('geolocate', (geoPos) => {
+        lastFoundPosition = [geoPos.coords.longitude, geoPos.coords.latitude]
+    })
+
+    map.addControl(geolocateControl, 'bottom-right');
 
     map.addControl(new mapboxgl.NavigationControl());
 
@@ -195,7 +279,7 @@
         outSR: 4326,
         outFields: "*",
         f: "geojson"
-    }); 
+    });
 
     let citrixQuery = queryString({
         where: "status LIKE 'open'",
@@ -210,7 +294,21 @@
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
 
+    let showingDirections = false;
+    let showingDirectionsSection = true;
+
+    const directionContol = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        profile: "mapbox/cycling",
+        styles: directionsStyling,
+        controls: {
+            profileSwitcher: false,
+        },
+    })
+
+
     map.on('load', () => {
+
         map.addSource('existing-bike-facilities', {
             'type': 'geojson',
             'data': existingBikeFacilitiesQuery
@@ -291,7 +389,7 @@
                     'Unknown', 1.5,
                     0
                 ],
-                'line-dasharray': [1,2]
+                'line-dasharray': [1, 2]
             }
         });
 
@@ -375,7 +473,7 @@
                     'Unknown', 1.5,
                     0
                 ],
-                'line-dasharray': [1,2]
+                'line-dasharray': [1, 2]
             }
         });
 
@@ -419,7 +517,7 @@
                 ]
             }
         });
-        
+
         // We are using greenway width as a guess as to how bikable a section
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
         // and make it dashed
@@ -449,7 +547,7 @@
                     6, 1,
                     0
                 ],
-                'line-dasharray': [1,2]
+                'line-dasharray': [1, 2]
             }
         });
 
@@ -477,8 +575,36 @@
         var layerName = ele.name;
         var visibilityState = ele.checked ? 'visible' : 'none';
 
-        map.setLayoutProperty(layerName,'visibility',visibilityState);
+        map.setLayoutProperty(layerName, 'visibility', visibilityState);
     }
+
+    function toggleDirections() {
+        if (showingDirections) {
+            map.removeControl(directionContol);
+            showingDirections = false;
+            document.getElementById('direction-buttons').style.display = 'none';
+        } else {
+            map.addControl(directionContol, 'top-left');
+            if (lastFoundPosition) {
+                directionContol.setOrigin(lastFoundPosition);
+            }
+            showingDirections = true;
+            document.getElementById('direction-buttons').style.display = 'block';
+        }
+    }
+
+    function toggleDirectionSection() {
+        if (showingDirectionsSection) {
+            document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'none';
+            directionContol.interactive(false);
+            showingDirectionsSection = false;
+        } else {
+            document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'block';
+            directionContol.interactive(true);
+            showingDirectionsSection = true;
+        }
+    }
+
 </script>
 
 </html>
