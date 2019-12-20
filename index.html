@@ -67,7 +67,9 @@
     </div>
     <div id="direction-buttons" style="display: none;">
         <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
-        <br>
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">swap_horizontal_circle</i>
+    </div>
+    <div id="show-directions-container"  style="display: none;">
         <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">swap_horizontal_circle</i>
     </div>
     <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
@@ -579,6 +581,7 @@
             map.removeControl(directionContol);
             showingDirections = false;
             document.getElementById('direction-buttons').style.display = 'none';
+            document.getElementById('show-directions-container').style.display = 'none';
         } else {
             map.addControl(directionContol, 'top-left');
             if (lastFoundPosition) {
@@ -592,10 +595,14 @@
     function toggleDirectionSection() {
         if (showingDirectionsSection) {
             document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'none';
+            document.getElementById('show-directions-container').style.display = 'block';
+            document.getElementById('direction-buttons').style.display = 'none';
             directionContol.interactive(false);
             showingDirectionsSection = false;
         } else {
             document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'block';
+            document.getElementById('show-directions-container').style.display = 'none';
+            document.getElementById('direction-buttons').style.display = 'block';
             directionContol.interactive(true);
             showingDirectionsSection = true;
         }

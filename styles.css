@@ -148,13 +148,16 @@ body {
 #direction-buttons {
     position: relative;
     z-index: 5;
-    margin-top: 35vh;
+    margin-top: 95px;
+    margin-left: 200px;
     width: fit-content;
-    float: right;
 }
 
-#direction-buttons > i {
-    margin: 15px 30px 15px 30px;
+#show-directions-container {
+    position: relative;
+    z-index: 5;
+    margin: 30px;
+    width: fit-content;
 }
 
 #existing {
