@@ -22,7 +22,7 @@ body {
 
 #title {
     display: inline-block;
-    padding: 20px;
+    padding: 20px 0px 20px 10px;
     font-size: 28px;
 }
 
@@ -86,7 +86,7 @@ body {
     float: right;
     cursor: pointer;
     color: #444;
-    padding: 17px 8px 17px 8px;
+    padding: 17px 4px 17px 4px;
 }
 
 #info-box {
@@ -112,7 +112,7 @@ body {
     width: fit-content;
     float: right;
     cursor: pointer;
-    padding: 17px 8px 17px 8px;
+    padding: 17px 4px 17px 4px;
 }
 
 #legend-icon-container {
