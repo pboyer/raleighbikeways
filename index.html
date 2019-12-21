@@ -179,8 +179,10 @@
         EXISTING_DASHED: "existing-bike-facilities-dashed-layer",
         PROGRAMMED: "programmed-bike-facilities-layer",
         PROGRAMMED_DASHED: "programmed-bike-facilities-dashed-layer",
-        GREENWAY: "existing-greenways-layer",
-        GREENWAY_DASHED: "existing-greenways-dashed-layer",
+        RALEIGH_GREENWAY: "existing-raleigh-greenways-layer",
+        RALEIGH_GREENWAY_DASHED: "existing-raleigh-greenways-dashed-layer",
+        CARY_GREENWAY: "existing-cary-greenways-layer",
+        CARY_GREENWAY_DASHED: "existing-cary-greenways-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
     }
 
@@ -270,7 +272,8 @@
     }
 
     // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
-    let existingGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
+    let existingRaleighGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
+    let caryGreenwaysURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/17';
     let existingBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer/6';
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
     let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
@@ -283,6 +286,13 @@
         f: "geojson"
     });
 
+    let caryGreenwayQueryParams = queryString({
+        where: "STATUS LIKE 'EXISTING'",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    })
+
     let citrixQuery = queryString({
         where: "status LIKE 'open'",
         outSR: 4326,
@@ -291,7 +301,8 @@
     });
 
     // Generate the full query URL
-    let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
+    let existingRaleighGreenwaysQuery = `${existingRaleighGreenwaysURL}/query?${queryParams}`;
+    let caryGreenwaysQuery = `${caryGreenwaysURL}/query?${caryGreenwayQueryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
@@ -479,33 +490,19 @@
             }
         });
 
-        map.addSource('existing-greenways', {
+        map.addSource('existing-greenways-raleigh', {
             'type': 'geojson',
-            'data': existingGreenwaysQuery
+            'data': existingRaleighGreenwaysQuery
         });
 
         map.addLayer({
-            'id': layers.GREENWAY,
+            'id': layers.RALEIGH_GREENWAY,
             'type': 'line',
-            'source': 'existing-greenways',
+            'source': 'existing-greenways-raleigh',
             'layout': {},
             'paint': {
-                'line-color': [
-                    'match',
-                    ['get', 'TYPE'],
-                    'Trail', colors.GREENWAY,
-                    'Crossing', colors.GREENWAY,
-                    'Structure', colors.GREENWAY,
-                    'grey'
-                ],
-                'line-width': [
-                    'match',
-                    ['get', 'TYPE'],
-                    'Trail', 1.5,
-                    'Crossing', 1.5,
-                    'Structure', 1.5,
-                    0
-                ],
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
                 'line-opacity': [
                     'case',
                     //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / natural
@@ -522,26 +519,64 @@
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
         // and make it dashed
         map.addLayer({
-            'id': layers.GREENWAY_DASHED,
+            'id': layers.RALEIGH_GREENWAY_DASHED,
             'type': 'line',
-            'source': 'existing-greenways',
+            'source': 'existing-greenways-raleigh',
             'layout': {},
             'paint': {
                 'line-color': colors.GREENWAY,
-                'line-width': [
-                    'match',
-                    ['get', 'TYPE'],
-                    'Trail', 1.5,
-                    'Crossing', 1.5,
-                    'Structure', 1.5,
-                    0
-                ],
+                'line-width': 1.5,
                 'line-opacity': [
                 'case',
                     //This will only show if the width is less than or equal to 6 feet OR the path material is gravel / natural
                     ["all",
                         ['>', ['get','WIDTH_FT'],6],
                         ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
+                    ],0,
+                    1,
+                ],
+                'line-dasharray': [1, 2]
+            }
+        });
+
+        map.addSource('greenways-cary', {
+            'type': 'geojson',
+            'data': caryGreenwaysQuery
+        });
+
+        map.addLayer({
+            'id': layers.CARY_GREENWAY,
+            'type': 'line',
+            'source': 'greenways-cary',
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'case',
+                    //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / aggregate / limestone
+                    ["all",
+                        ['>', ['get','WIDTH'],6],
+                        ["match",["get","SURFTYPE"],["Aggregate","Limestone","Gravel"],false,true] 
+                    ],1,
+                    0,
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CARY_GREENWAY_DASHED,
+            'type': 'line',
+            'source': 'greenways-cary',
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'case',
+                    ["all",
+                        ['>', ['get','WIDTH'],6],
+                        ["match",["get","SURFTYPE"],["Aggregate","Limestone","Gravel"],false,true] 
                     ],0,
                     1,
                 ],
