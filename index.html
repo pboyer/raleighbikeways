@@ -77,8 +77,8 @@
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="existing-greenways-layer" checked>Greenways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,'cary-greenways-layer');"
+                            name="existing-raleigh-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
@@ -88,8 +88,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,'cary-greenways-dashed-layer');"
+                            name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
@@ -181,9 +181,17 @@
         PROGRAMMED_DASHED: "programmed-bike-facilities-dashed-layer",
         RALEIGH_GREENWAY: "existing-raleigh-greenways-layer",
         RALEIGH_GREENWAY_DASHED: "existing-raleigh-greenways-dashed-layer",
-        CARY_GREENWAY: "existing-cary-greenways-layer",
-        CARY_GREENWAY_DASHED: "existing-cary-greenways-dashed-layer",
+        CARY_GREENWAY: "cary-greenways-layer",
+        CARY_GREENWAY_DASHED: "cary-greenways-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
+    }
+
+    const sources = {
+        RALEIGH_GREENWAY: "existing-greenways-raleigh",
+        CARY_GREENWAY: "cary-greenways",
+        EXISTING_FACILITIES: "existing-bike-facilities",
+        PROGRAMMED_FACILITIES: "programmed-bike-facilities",
+        CITRIX: "citrix-cycle-stations",
     }
 
     // Custom styling for the direction line
@@ -322,7 +330,7 @@
 
     map.on('load', () => {
 
-        map.addSource('existing-bike-facilities', {
+        map.addSource(sources.EXISTING_FACILITIES, {
             'type': 'geojson',
             'data': existingBikeFacilitiesQuery
         });
@@ -330,7 +338,7 @@
         map.addLayer({
             'id': layers.EXISTING,
             'type': 'line',
-            'source': 'existing-bike-facilities',
+            'source': sources.EXISTING_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -369,7 +377,7 @@
         map.addLayer({
             'id': layers.EXISTING_DASHED,
             'type': 'line',
-            'source': 'existing-bike-facilities',
+            'source': sources.EXISTING_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -406,7 +414,7 @@
             }
         });
 
-        map.addSource('programmed-bike-facilities', {
+        map.addSource(sources.PROGRAMMED_FACILITIES, {
             'type': 'geojson',
             'data': programmedBikeFacilitiesQuery
         });
@@ -414,7 +422,7 @@
         map.addLayer({
             'id': layers.PROGRAMMED,
             'type': 'line',
-            'source': 'programmed-bike-facilities',
+            'source': sources.PROGRAMMED_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -453,7 +461,7 @@
         map.addLayer({
             'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
-            'source': 'programmed-bike-facilities',
+            'source': sources.PROGRAMMED_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -490,7 +498,7 @@
             }
         });
 
-        map.addSource('existing-greenways-raleigh', {
+        map.addSource(sources.RALEIGH_GREENWAY, {
             'type': 'geojson',
             'data': existingRaleighGreenwaysQuery
         });
@@ -498,7 +506,7 @@
         map.addLayer({
             'id': layers.RALEIGH_GREENWAY,
             'type': 'line',
-            'source': 'existing-greenways-raleigh',
+            'source': sources.RALEIGH_GREENWAY,
             'layout': {},
             'paint': {
                 'line-color': colors.GREENWAY,
@@ -521,7 +529,7 @@
         map.addLayer({
             'id': layers.RALEIGH_GREENWAY_DASHED,
             'type': 'line',
-            'source': 'existing-greenways-raleigh',
+            'source': sources.RALEIGH_GREENWAY,
             'layout': {},
             'paint': {
                 'line-color': colors.GREENWAY,
@@ -539,7 +547,7 @@
             }
         });
 
-        map.addSource('greenways-cary', {
+        map.addSource(sources.CARY_GREENWAY, {
             'type': 'geojson',
             'data': caryGreenwaysQuery
         });
@@ -547,7 +555,7 @@
         map.addLayer({
             'id': layers.CARY_GREENWAY,
             'type': 'line',
-            'source': 'greenways-cary',
+            'source': sources.CARY_GREENWAY,
             'layout': {},
             'paint': {
                 'line-color': colors.GREENWAY,
@@ -567,7 +575,7 @@
         map.addLayer({
             'id': layers.CARY_GREENWAY_DASHED,
             'type': 'line',
-            'source': 'greenways-cary',
+            'source': sources.CARY_GREENWAY,
             'layout': {},
             'paint': {
                 'line-color': colors.GREENWAY,
@@ -585,7 +593,7 @@
         });
 
 
-        map.addSource('citrix-cycle-stations', {
+        map.addSource(sources.CITRIX, {
             'type': 'geojson',
             'data': citrixCycleStationsQuery
         });
@@ -593,7 +601,7 @@
         map.addLayer({
             'id': layers.CITRIX,
             'type': 'circle',
-            'source': 'citrix-cycle-stations',
+            'source': sources.CITRIX,
             'layout': {},
             'paint': {
                 'circle-color': colors.CITRIX,
@@ -604,8 +612,8 @@
         map.resize();
     });
 
-    function legendToggleLayer(ele) {
-        var layerName = ele.name;
+    function legendToggleLayer(ele,layerName) {
+        var layerName = layerName || ele.name;
         var visibilityState = ele.checked ? 'visible' : 'none';
 
         map.setLayoutProperty(layerName, 'visibility', visibilityState);
