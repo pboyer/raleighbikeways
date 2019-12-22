@@ -108,13 +108,6 @@ body {
     color: #000;
 }
 
-#direction-icon-container {
-    width: fit-content;
-    float: right;
-    cursor: pointer;
-    padding: 17px 4px 17px 4px;
-}
-
 #legend-icon-container {
     width: fit-content;
     float: right;
@@ -143,6 +136,10 @@ body {
     transform: scale(1.5);
     margin-right: 20px;
     cursor: pointer;
+}
+
+.mapboxgl-ctrl-directions {
+    display: none;
 }
 
 #direction-buttons {

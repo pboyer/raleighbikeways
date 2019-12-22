@@ -30,9 +30,6 @@
         <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'">
             <i class="material-icons md-36 noselect">info</i>
         </div>
-        <div id="direction-icon-container" onclick="toggleDirections()">
-            <i class="material-icons md-36 noselect">navigation</i>
-        </div>
         <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
             <i class="material-icons md-36 noselect">layers</i>
         </div>
@@ -67,10 +64,10 @@
     </div>
     <div id="direction-buttons" style="display: none;">
         <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
-        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">swap_horizontal_circle</i>
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">explore_off</i>
     </div>
-    <div id="show-directions-container"  style="display: none;">
-        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">swap_horizontal_circle</i>
+    <div id="show-directions-container">
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">navigation</i>
     </div>
     <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
         <div id="legend-box" class="modal" onclick="event.stopPropagation()">
@@ -270,6 +267,22 @@
 
     map.addControl(new mapboxgl.NavigationControl());
 
+    let showingDirections = false;
+    let showingDirectionsSection = false;
+
+    const directionContol = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        profile: "mapbox/cycling",
+        styles: directionsStyling,
+        interactive: false,
+        controls: {
+            profileSwitcher: false,
+
+        },
+    })
+
+    map.addControl(directionContol, 'top-left');
+
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
         let queryString = '';
@@ -315,17 +328,7 @@
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
 
-    let showingDirections = false;
-    let showingDirectionsSection = true;
 
-    const directionContol = new MapboxDirections({
-        accessToken: mapboxgl.accessToken,
-        profile: "mapbox/cycling",
-        styles: directionsStyling,
-        controls: {
-            profileSwitcher: false,
-        },
-    })
 
 
     map.on('load', () => {
@@ -617,22 +620,6 @@
         var visibilityState = ele.checked ? 'visible' : 'none';
 
         map.setLayoutProperty(layerName, 'visibility', visibilityState);
-    }
-
-    function toggleDirections() {
-        if (showingDirections) {
-            map.removeControl(directionContol);
-            showingDirections = false;
-            document.getElementById('direction-buttons').style.display = 'none';
-            document.getElementById('show-directions-container').style.display = 'none';
-        } else {
-            map.addControl(directionContol, 'top-left');
-            if (lastFoundPosition) {
-                directionContol.setOrigin(lastFoundPosition);
-            }
-            showingDirections = true;
-            document.getElementById('direction-buttons').style.display = 'block';
-        }
     }
 
     function toggleDirectionSection() {
