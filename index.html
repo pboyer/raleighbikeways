@@ -74,7 +74,7 @@
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,'cary-greenways-layer');"
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);"
                             name="existing-raleigh-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
@@ -85,11 +85,35 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,'cary-greenways-dashed-layer');"
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);"
                             name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
+                            name="existing-bike-facilities-layer" checked>Bikeways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="existing-legend">
+                            <line x1="0" y1="5" x2="100" y2="5" />
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES_DASHED);"
+                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="existing-legend">
                             <line x1="0" y1="5" x2="20" y2="5" />
                             <line x1="40" y1="5" x2="60" y2="5" />
                             <line x1="80" y1="5" x2="100" y2="5" />
@@ -114,30 +138,6 @@
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
-                            <line x1="0" y1="5" x2="20" y2="5" />
-                            <line x1="40" y1="5" x2="60" y2="5" />
-                            <line x1="80" y1="5" x2="100" y2="5" />
-                        </svg>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="existing-bike-facilities-layer" checked>Bikeways<br>
-                    </td>
-                    <td>
-                        <svg height="10" width="100" class="existing-legend">
-                            <line x1="0" y1="5" x2="100" y2="5" />
-                        </svg>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
-                    </td>
-                    <td>
-                        <svg height="10" width="100" class="existing-legend">
                             <line x1="0" y1="5" x2="20" y2="5" />
                             <line x1="40" y1="5" x2="60" y2="5" />
                             <line x1="80" y1="5" x2="100" y2="5" />
@@ -180,12 +180,15 @@
         RALEIGH_GREENWAY_DASHED: "existing-raleigh-greenways-dashed-layer",
         CARY_GREENWAY: "cary-greenways-layer",
         CARY_GREENWAY_DASHED: "cary-greenways-dashed-layer",
+        CARY_BIKES: "cary-bikes-layer",
+        CARY_BIKES_DASHED: "cary-bikes-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
     }
 
     const sources = {
         RALEIGH_GREENWAY: "existing-greenways-raleigh",
         CARY_GREENWAY: "cary-greenways",
+        CARY_BIKES: "cary-bikes",
         EXISTING_FACILITIES: "existing-bike-facilities",
         PROGRAMMED_FACILITIES: "programmed-bike-facilities",
         CITRIX: "citrix-cycle-stations",
@@ -295,6 +298,7 @@
     // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
     let existingRaleighGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
     let caryGreenwaysURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/17';
+    let caryBikeURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/16';
     let existingBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer/6';
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
     let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
@@ -312,7 +316,15 @@
         outSR: 4326,
         outFields: "*",
         f: "geojson"
-    })
+    });
+
+    let caryBikeQueryParams = queryString({
+        // ObjectID 645 is a bad apple that causes the GeoJSON call to return a 400
+        where: "STATUS LIKE 'EXISTING' AND OBJECTID <> 645",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
 
     let citrixQuery = queryString({
         where: "status LIKE 'open'",
@@ -324,12 +336,10 @@
     // Generate the full query URL
     let existingRaleighGreenwaysQuery = `${existingRaleighGreenwaysURL}/query?${queryParams}`;
     let caryGreenwaysQuery = `${caryGreenwaysURL}/query?${caryGreenwayQueryParams}`;
+    let caryBikeQuery = `${caryBikeURL}/query?${caryBikeQueryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
-
-
-
 
     map.on('load', () => {
 
@@ -411,6 +421,52 @@
                     // 'Multi-Use Path', 1.5,
                     'Shared Lane Markings', 1.5,
                     'Unknown', 1.5,
+                    0
+                ],
+                'line-dasharray': [1, 2]
+            }
+        });
+
+        map.addSource(sources.CARY_BIKES, {
+            'type': 'geojson',
+            'data': caryBikeQuery,
+        });
+
+        map.addLayer({
+            'id': layers.CARY_BIKES,
+            'type': 'line',
+            'source': sources.CARY_BIKES,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': [
+                    "match",
+                    ['get','FACILTYTYPE'],
+                    ['STRIPED'],1.5,
+                    ['PROTECTED BIKE LANES'],2,
+                    0
+                ],
+
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CARY_BIKES_DASHED,
+            'type': 'line',
+            'source': sources.CARY_BIKES,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': [
+                    "match",
+                    ['get','FACILTYTYPE'],
+                    ['STRIPED','PROTECTED BIKE LANES'],0,
+                    1.5
+                ],
+                'line-opacity': [
+                    "match",
+                    ['get','SPEEDLIMIT'],
+                    ["25","25 MPH"],1,
                     0
                 ],
                 'line-dasharray': [1, 2]
