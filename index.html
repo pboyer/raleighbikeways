@@ -74,7 +74,7 @@
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);"
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);legendToggleLayer(this,layers.RALEIGH_GREENWAY_SYMBOL);"
                             name="existing-raleigh-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
@@ -168,6 +168,8 @@
         CITRIX: '#f9423a',
         PROGRAMMED: '#3498DB',
         GREENWAY: '#28B463',
+        GREENWAY_CLOSED: '#CC0000',
+        GREENWAY_CLOSED_X: '#FF0000',
         EXISTING: '#EEE',
     }
 
@@ -178,6 +180,7 @@
         PROGRAMMED_DASHED: "programmed-bike-facilities-dashed-layer",
         RALEIGH_GREENWAY: "existing-raleigh-greenways-layer",
         RALEIGH_GREENWAY_DASHED: "existing-raleigh-greenways-dashed-layer",
+        RALEIGH_GREENWAY_SYMBOL: "raleigh-greenway-symbol-layer",
         CARY_GREENWAY: "cary-greenways-layer",
         CARY_GREENWAY_DASHED: "cary-greenways-dashed-layer",
         CARY_BIKES: "cary-bikes-layer",
@@ -568,7 +571,12 @@
             'source': sources.RALEIGH_GREENWAY,
             'layout': {},
             'paint': {
-                'line-color': colors.GREENWAY,
+                'line-color': [
+                    'match',
+                        ['get', 'GWSTATUS'],
+                        "CLOSED_TEMP",colors.GREENWAY_CLOSED,
+                        colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
+                ],
                 'line-width': 1.5,
                 'line-opacity': [
                     'case',
@@ -578,9 +586,30 @@
                         ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
                     ],1,
                     0,
-                ]
+                ],
             }
         });
+
+        map.addLayer({
+            'id': layers.RALEIGH_GREENWAY_SYMBOL,
+            'type': 'symbol',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {
+                'text-field': [                       
+                    'match',
+                    ['get', 'GWSTATUS'],
+                    "CLOSED_TEMP", "X",
+                    ""
+                ],
+                'symbol-placement': 'line-center',
+            },
+            'paint': {
+                'text-color': colors.GREENWAY_CLOSED_X,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
+        });
+
 
         // We are using greenway width as a guess as to how bikable a section
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
@@ -591,7 +620,12 @@
             'source': sources.RALEIGH_GREENWAY,
             'layout': {},
             'paint': {
-                'line-color': colors.GREENWAY,
+                'line-color': [
+                    'match',
+                        ['get', 'GWSTATUS'],
+                        "CLOSED_TEMP",colors.GREENWAY_CLOSED,
+                        colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
+                ],
                 'line-width': 1.5,
                 'line-opacity': [
                 'case',
