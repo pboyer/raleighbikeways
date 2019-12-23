@@ -198,6 +198,13 @@ body {
     padding-top: 5px;
 }
 
+
+.greenway-detour-legend {
+    stroke: yellow;
+    stroke-width: 8;
+    padding-top: 5px;
+}
+
 .existing-legend {
     stroke: #eee;
     stroke-width: 8;

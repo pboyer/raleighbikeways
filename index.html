@@ -98,6 +98,19 @@
                 </tr>
                 <tr>
                     <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="greenway-detour-layer" checked>Greenway Detours<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="greenway-detour-legend">
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
                             name="existing-bike-facilities-layer" checked>Bikeways<br>
                     </td>
@@ -170,6 +183,7 @@
         GREENWAY: '#28B463',
         GREENWAY_CLOSED: '#CC0000',
         GREENWAY_CLOSED_X: '#FF0000',
+        GREENWAY_DETOUR: 'yellow',
         EXISTING: '#EEE',
     }
 
@@ -183,6 +197,7 @@
         RALEIGH_GREENWAY_SYMBOL: "raleigh-greenway-symbol-layer",
         CARY_GREENWAY: "cary-greenways-layer",
         CARY_GREENWAY_DASHED: "cary-greenways-dashed-layer",
+        GREENWAY_DETOUR: "greenway-detour-layer",
         CARY_BIKES: "cary-bikes-layer",
         CARY_BIKES_DASHED: "cary-bikes-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
@@ -191,6 +206,7 @@
     const sources = {
         RALEIGH_GREENWAY: "existing-greenways-raleigh",
         CARY_GREENWAY: "cary-greenways",
+        GREENWAY_DETOUR: 'greenway-detour',
         CARY_BIKES: "cary-bikes",
         EXISTING_FACILITIES: "existing-bike-facilities",
         PROGRAMMED_FACILITIES: "programmed-bike-facilities",
@@ -343,6 +359,7 @@
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
+    let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson'
 
     map.on('load', () => {
 
@@ -639,6 +656,22 @@
                 'line-dasharray': [1, 2]
             }
         });
+
+        map.addSource(sources.GREENWAY_DETOUR, {
+            'type': 'geojson',
+            'data': greenwayDetourQuery,
+        })
+
+        map.addLayer({
+            'id': layers.GREENWAY_DETOUR,
+            'type': 'line',
+            'source': sources.GREENWAY_DETOUR,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY_DETOUR,
+                'line-width': 1.5,
+            }
+        })
 
         map.addSource(sources.CARY_GREENWAY, {
             'type': 'geojson',
