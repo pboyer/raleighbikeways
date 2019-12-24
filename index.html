@@ -7,113 +7,164 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.css"
+        type="text/css" />
+
+    <!-- Flavicon Metadata -->
+    <link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
 <body>
     <div id="header">
         <div id="title">Raleigh Bikeways</div>
-        <div id=info-icon onclick="toggleInfo()"><i class="material-icons md-36">info</i></div>
-        <div id="info-box" style="visibility: hidden;">
-            <div id="about">
-                <h2>Raleigh Bikeways</h2>
-                <span>This is a community built app to help you get around Raleigh while biking.  
-                    The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank" style="color: white;">Github</a>
-                </span>
-            </div>
-            <br>
-            <div id="sources">
-                <h2>Sources (all from municipal data)</h2>
+        <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'">
+            <i class="material-icons md-36 noselect">info</i>
+        </div>
+        <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
+            <i class="material-icons md-36 noselect">layers</i>
+        </div>
+        <div id="info-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+            <div id="info-box" class="modal" onclick="event.stopPropagation()">
+                <div id="about">
+                    <h2>Raleigh Bikeways</h2>
+                    <span>This is a community built app to help you get around Raleigh while biking.
+                        The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank"
+                            style="color: white;">Github</a>
+                    </span>
+                </div>
                 <br>
-                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer" target="_blank">Existing Raleigh Bike Infrastructure</a>
-                <br>
-                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer" target="_blank">Programmed Raleigh Bike Infrastructure</a>
-                <br>
-                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer" target="_blank">Raleigh Greenways</a>
-                <br>
-                <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer" target="_blank">Citrix Cycle Stations</a>
-                <br>
+                <div id="sources">
+                    <h2>Sources (all from municipal data)</h2>
+                    <br>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer"
+                        target="_blank">Existing Raleigh Bike Infrastructure</a>
+                    <br>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer"
+                        target="_blank">Programmed Raleigh Bike Infrastructure</a>
+                    <br>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer"
+                        target="_blank">Raleigh Greenways</a>
+                    <br>
+                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer"
+                        target="_blank">Citrix Cycle Stations</a>
+                    <br>
+                </div>
             </div>
         </div>
     </div>
-    <div id="legend">
-        <div onclick="toggleLegend()">
-            <i class="material-icons md-48 md-light noselect">layers</i>
-        </div>
-        <div id="legend-box">
+    <div id="direction-buttons" style="display: none;">
+        <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">explore_off</i>
+    </div>
+    <div id="show-directions-container">
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">navigation</i>
+    </div>
+    <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="legend-box" class="modal" onclick="event.stopPropagation()">
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-layer" checked>Greenways<br>        
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);legendToggleLayer(this,layers.RALEIGH_GREENWAY_SYMBOL);"
+                            name="existing-raleigh-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
-                            <line x1="0" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-greenways-dashed-layer" checked>Marginal Greenways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);"
+                            name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
-                            <line x1="0" y1="5" x2="20" y2="5"/>
-                            <line x1="40" y1="5" x2="60" y2="5"/>
-                            <line x1="80" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="greenway-detour-layer" checked>Greenway Detours<br>
                     </td>
                     <td>
-                        <svg height="10" width="100" class="programmed-legend">
-                            <line x1="0" y1="5" x2="100" y2="5"/>
+                        <svg height="10" width="100" class="greenway-detour-legend">
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
-                    </td>
-                    <td>
-                        <svg height="10" width="100" class="programmed-legend">
-                            <line x1="0" y1="5" x2="20" y2="5"/>
-                            <line x1="40" y1="5" x2="60" y2="5"/>
-                            <line x1="80" y1="5" x2="100" y2="5"/>
-                        </svg>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-layer" checked>Bikeways<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
+                            name="existing-bike-facilities-layer" checked>Bikeways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="existing-legend">
-                            <line x1="0" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES_DASHED);"
+                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="existing-legend">
-                            <line x1="0" y1="5" x2="20" y2="5"/>
-                            <line x1="40" y1="5" x2="60" y2="5"/>
-                            <line x1="80" y1="5" x2="100" y2="5"/>
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
                         </svg>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)" name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="programmed-legend">
+                            <line x1="0" y1="5" x2="100" y2="5" />
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="programmed-legend">
+                            <line x1="0" y1="5" x2="20" y2="5" />
+                            <line x1="40" y1="5" x2="60" y2="5" />
+                            <line x1="80" y1="5" x2="100" y2="5" />
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
+                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
                     </td>
                     <td>
                         <svg height="24" width="24" class="existing-legend">
-                                <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="red" />
+                            <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="red" />
                         </svg>
                     </td>
                 </tr>
@@ -130,6 +181,9 @@
         CITRIX: '#f9423a',
         PROGRAMMED: '#3498DB',
         GREENWAY: '#28B463',
+        GREENWAY_CLOSED: '#CC0000',
+        GREENWAY_CLOSED_X: '#FF0000',
+        GREENWAY_DETOUR: 'yellow',
         EXISTING: '#EEE',
     }
 
@@ -138,10 +192,77 @@
         EXISTING_DASHED: "existing-bike-facilities-dashed-layer",
         PROGRAMMED: "programmed-bike-facilities-layer",
         PROGRAMMED_DASHED: "programmed-bike-facilities-dashed-layer",
-        GREENWAY: "existing-greenways-layer",
-        GREENWAY_DASHED: "existing-greenways-dashed-layer",
+        RALEIGH_GREENWAY: "existing-raleigh-greenways-layer",
+        RALEIGH_GREENWAY_DASHED: "existing-raleigh-greenways-dashed-layer",
+        RALEIGH_GREENWAY_SYMBOL: "raleigh-greenway-symbol-layer",
+        CARY_GREENWAY: "cary-greenways-layer",
+        CARY_GREENWAY_DASHED: "cary-greenways-dashed-layer",
+        GREENWAY_DETOUR: "greenway-detour-layer",
+        CARY_BIKES: "cary-bikes-layer",
+        CARY_BIKES_DASHED: "cary-bikes-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
     }
+
+    const sources = {
+        RALEIGH_GREENWAY: "existing-greenways-raleigh",
+        CARY_GREENWAY: "cary-greenways",
+        GREENWAY_DETOUR: 'greenway-detour',
+        CARY_BIKES: "cary-bikes",
+        EXISTING_FACILITIES: "existing-bike-facilities",
+        PROGRAMMED_FACILITIES: "programmed-bike-facilities",
+        CITRIX: "citrix-cycle-stations",
+    }
+
+    // Custom styling for the direction line
+    // Make it see through so user can see the bike infrastructure. 
+    const directionsStyling = [{
+        'id': 'directions-route-line',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+            'line-cap': 'butt',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-color': {
+                'property': 'congestion',
+                'type': 'categorical',
+                'default': '#4882c5',
+                'stops': [
+                    ['unknown', '#4882c5'],
+                    ['low', '#4882c5'],
+                    ['moderate', '#f09a46'],
+                    ['heavy', '#e34341'],
+                    ['severe', '#8b2342']
+                ]
+            },
+            'line-width': 7,
+            'line-opacity': .5
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'LineString'],
+            ['in', 'route', 'selected']
+        ]
+    }, {
+        'id': 'directions-route-line-casing',
+        'type': 'line',
+        'source': 'directions',
+        'layout': {
+            'line-cap': 'round',
+            'line-join': 'round'
+        },
+        'paint': {
+            'line-color': '#2d5f99',
+            'line-width': 12,
+            'line-opacity': .5
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'LineString'],
+            ['in', 'route', 'selected']
+        ]
+    }];
 
 
     let map = new mapboxgl.Map({
@@ -151,14 +272,38 @@
         zoom: 12
     });
 
-    map.addControl(new mapboxgl.GeolocateControl({
+    const geolocateControl = new mapboxgl.GeolocateControl({
         positionOptions: {
             enableHighAccuracy: true
         },
         trackUserLocation: true
-    }),'bottom-right');
+    })
+
+    let lastFoundPosition;
+
+    geolocateControl.on('geolocate', (geoPos) => {
+        lastFoundPosition = [geoPos.coords.longitude, geoPos.coords.latitude]
+    })
+
+    map.addControl(geolocateControl, 'bottom-right');
 
     map.addControl(new mapboxgl.NavigationControl());
+
+    let showingDirections = false;
+    let showingDirectionsSection = false;
+
+    const directionContol = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        profile: "mapbox/cycling",
+        styles: directionsStyling,
+        interactive: false,
+        controls: {
+            profileSwitcher: false,
+
+        },
+    })
+
+    map.addControl(directionContol, 'top-left');
 
     // Function to help build a query string for querying the ArcGIS REST service
     function queryString(queryProperties) {
@@ -170,7 +315,9 @@
     }
 
     // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
-    let existingGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
+    let existingRaleighGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
+    let caryGreenwaysURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/17';
+    let caryBikeURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/16';
     let existingBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer/6';
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
     let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
@@ -181,7 +328,22 @@
         outSR: 4326,
         outFields: "*",
         f: "geojson"
-    }); 
+    });
+
+    let caryGreenwayQueryParams = queryString({
+        where: "STATUS LIKE 'EXISTING'",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
+
+    let caryBikeQueryParams = queryString({
+        // ObjectID 645 is a bad apple that causes the GeoJSON call to return a 400
+        where: "STATUS LIKE 'EXISTING' AND OBJECTID <> 645",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
 
     let citrixQuery = queryString({
         where: "status LIKE 'open'",
@@ -191,13 +353,17 @@
     });
 
     // Generate the full query URL
-    let existingGreenwaysQuery = `${existingGreenwaysURL}/query?${queryParams}`;
+    let existingRaleighGreenwaysQuery = `${existingRaleighGreenwaysURL}/query?${queryParams}`;
+    let caryGreenwaysQuery = `${caryGreenwaysURL}/query?${caryGreenwayQueryParams}`;
+    let caryBikeQuery = `${caryBikeURL}/query?${caryBikeQueryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
+    let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson'
 
     map.on('load', () => {
-        map.addSource('existing-bike-facilities', {
+
+        map.addSource(sources.EXISTING_FACILITIES, {
             'type': 'geojson',
             'data': existingBikeFacilitiesQuery
         });
@@ -205,7 +371,7 @@
         map.addLayer({
             'id': layers.EXISTING,
             'type': 'line',
-            'source': 'existing-bike-facilities',
+            'source': sources.EXISTING_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -244,7 +410,7 @@
         map.addLayer({
             'id': layers.EXISTING_DASHED,
             'type': 'line',
-            'source': 'existing-bike-facilities',
+            'source': sources.EXISTING_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -277,11 +443,57 @@
                     'Unknown', 1.5,
                     0
                 ],
-                'line-dasharray': [1,2]
+                'line-dasharray': [1, 2]
             }
         });
 
-        map.addSource('programmed-bike-facilities', {
+        map.addSource(sources.CARY_BIKES, {
+            'type': 'geojson',
+            'data': caryBikeQuery,
+        });
+
+        map.addLayer({
+            'id': layers.CARY_BIKES,
+            'type': 'line',
+            'source': sources.CARY_BIKES,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': [
+                    "match",
+                    ['get','FACILTYTYPE'],
+                    ['STRIPED'],1.5,
+                    ['PROTECTED BIKE LANES'],2,
+                    0
+                ],
+
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CARY_BIKES_DASHED,
+            'type': 'line',
+            'source': sources.CARY_BIKES,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': [
+                    "match",
+                    ['get','FACILTYTYPE'],
+                    ['STRIPED','PROTECTED BIKE LANES'],0,
+                    1.5
+                ],
+                'line-opacity': [
+                    "match",
+                    ['get','SPEEDLIMIT'],
+                    ["25","25 MPH"],1,
+                    0
+                ],
+                'line-dasharray': [1, 2]
+            }
+        });
+
+        map.addSource(sources.PROGRAMMED_FACILITIES, {
             'type': 'geojson',
             'data': programmedBikeFacilitiesQuery
         });
@@ -289,7 +501,7 @@
         map.addLayer({
             'id': layers.PROGRAMMED,
             'type': 'line',
-            'source': 'programmed-bike-facilities',
+            'source': sources.PROGRAMMED_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -328,7 +540,7 @@
         map.addLayer({
             'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
-            'source': 'programmed-bike-facilities',
+            'source': sources.PROGRAMMED_FACILITIES,
             'layout': {},
             'paint': {
                 'line-color': [
@@ -361,86 +573,153 @@
                     'Unknown', 1.5,
                     0
                 ],
-                'line-dasharray': [1,2]
+                'line-dasharray': [1, 2]
             }
         });
 
-        map.addSource('existing-greenways', {
+        map.addSource(sources.RALEIGH_GREENWAY, {
             'type': 'geojson',
-            'data': existingGreenwaysQuery
+            'data': existingRaleighGreenwaysQuery
         });
 
         map.addLayer({
-            'id': layers.GREENWAY,
+            'id': layers.RALEIGH_GREENWAY,
             'type': 'line',
-            'source': 'existing-greenways',
+            'source': sources.RALEIGH_GREENWAY,
             'layout': {},
             'paint': {
                 'line-color': [
                     'match',
-                    ['get', 'TYPE'],
-                    'Trail', colors.GREENWAY,
-                    'Crossing', colors.GREENWAY,
-                    'Structure', colors.GREENWAY,
-                    'grey'
+                        ['get', 'GWSTATUS'],
+                        "CLOSED_TEMP",colors.GREENWAY_CLOSED,
+                        colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
                 ],
-                'line-width': [
-                    'match',
-                    ['get', 'TYPE'],
-                    'Trail', 1.5,
-                    'Crossing', 1.5,
-                    'Structure', 1.5,
-                    0
-                ],
+                'line-width': 1.5,
                 'line-opacity': [
-                    'match',
-                    ['get', 'WIDTH_FT'],
-                    1, 0,
-                    2, 0,
-                    3, 0,
-                    4, 0,
-                    5, 0,
-                    6, 0,
-                    1
-                ]
+                    'case',
+                    //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / natural
+                    ["all",
+                        ['>', ['get','WIDTH_FT'],6],
+                        ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
+                    ],1,
+                    0,
+                ],
             }
         });
-        
+
+        map.addLayer({
+            'id': layers.RALEIGH_GREENWAY_SYMBOL,
+            'type': 'symbol',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {
+                'text-field': [                       
+                    'match',
+                    ['get', 'GWSTATUS'],
+                    "CLOSED_TEMP", "X",
+                    ""
+                ],
+                'symbol-placement': 'line-center',
+            },
+            'paint': {
+                'text-color': colors.GREENWAY_CLOSED_X,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
+        });
+
+
         // We are using greenway width as a guess as to how bikable a section
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
         // and make it dashed
         map.addLayer({
-            'id': layers.GREENWAY_DASHED,
+            'id': layers.RALEIGH_GREENWAY_DASHED,
             'type': 'line',
-            'source': 'existing-greenways',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {},
+            'paint': {
+                'line-color': [
+                    'match',
+                        ['get', 'GWSTATUS'],
+                        "CLOSED_TEMP",colors.GREENWAY_CLOSED,
+                        colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
+                ],
+                'line-width': 1.5,
+                'line-opacity': [
+                'case',
+                    //This will only show if the width is less than or equal to 6 feet OR the path material is gravel / natural
+                    ["all",
+                        ['>', ['get','WIDTH_FT'],6],
+                        ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
+                    ],0,
+                    1,
+                ],
+                'line-dasharray': [1, 2]
+            }
+        });
+
+        map.addSource(sources.GREENWAY_DETOUR, {
+            'type': 'geojson',
+            'data': greenwayDetourQuery,
+        })
+
+        map.addLayer({
+            'id': layers.GREENWAY_DETOUR,
+            'type': 'line',
+            'source': sources.GREENWAY_DETOUR,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY_DETOUR,
+                'line-width': 1.5,
+            }
+        })
+
+        map.addSource(sources.CARY_GREENWAY, {
+            'type': 'geojson',
+            'data': caryGreenwaysQuery
+        });
+
+        map.addLayer({
+            'id': layers.CARY_GREENWAY,
+            'type': 'line',
+            'source': sources.CARY_GREENWAY,
             'layout': {},
             'paint': {
                 'line-color': colors.GREENWAY,
-                'line-width': [
-                    'match',
-                    ['get', 'TYPE'],
-                    'Trail', 1.5,
-                    'Crossing', 1.5,
-                    'Structure', 1.5,
-                    0
-                ],
+                'line-width': 1.5,
                 'line-opacity': [
-                    'match',
-                    ['get', 'WIDTH_FT'],
-                    1, 1,
-                    2, 1,
-                    3, 1,
-                    4, 1,
-                    5, 1,
-                    6, 1,
-                    0
+                    'case',
+                    //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / aggregate / limestone
+                    ["all",
+                        ['>', ['get','WIDTH'],6],
+                        ["match",["get","SURFTYPE"],["Aggregate","Limestone","Gravel"],false,true] 
+                    ],1,
+                    0,
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CARY_GREENWAY_DASHED,
+            'type': 'line',
+            'source': sources.CARY_GREENWAY,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'case',
+                    ["all",
+                        ['>', ['get','WIDTH'],6],
+                        ["match",["get","SURFTYPE"],["Aggregate","Limestone","Gravel"],false,true] 
+                    ],0,
+                    1,
                 ],
-                'line-dasharray': [1,2]
+                'line-dasharray': [1, 2]
             }
         });
 
 
-        map.addSource('citrix-cycle-stations', {
+        map.addSource(sources.CITRIX, {
             'type': 'geojson',
             'data': citrixCycleStationsQuery
         });
@@ -448,7 +727,7 @@
         map.addLayer({
             'id': layers.CITRIX,
             'type': 'circle',
-            'source': 'citrix-cycle-stations',
+            'source': sources.CITRIX,
             'layout': {},
             'paint': {
                 'circle-color': colors.CITRIX,
@@ -459,28 +738,29 @@
         map.resize();
     });
 
-    function legendToggleLayer(ele) {
-        var layerName = ele.name;
+    function legendToggleLayer(ele,layerName) {
+        var layerName = layerName || ele.name;
         var visibilityState = ele.checked ? 'visible' : 'none';
 
-        map.setLayoutProperty(layerName,'visibility',visibilityState);
+        map.setLayoutProperty(layerName, 'visibility', visibilityState);
     }
 
-    function toggleLegend() {
-        var legendBox = document.getElementById("legend-box");
-        var isVisible = legendBox.style.visibility == 'visible';
-        var newVisibilityState = isVisible ? 'hidden' : 'visible';
-
-        legendBox.style.visibility = newVisibilityState;
+    function toggleDirectionSection() {
+        if (showingDirectionsSection) {
+            document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'none';
+            document.getElementById('show-directions-container').style.display = 'block';
+            document.getElementById('direction-buttons').style.display = 'none';
+            directionContol.interactive(false);
+            showingDirectionsSection = false;
+        } else {
+            document.getElementsByClassName('mapboxgl-ctrl-directions')[0].style.display = 'block';
+            document.getElementById('show-directions-container').style.display = 'none';
+            document.getElementById('direction-buttons').style.display = 'block';
+            directionContol.interactive(true);
+            showingDirectionsSection = true;
+        }
     }
 
-    function toggleInfo() {
-        var infoBox = document.getElementById("info-box");
-        var isVisible = infoBox.style.visibility == 'visible';
-        var newVisibilityState = isVisible ? 'hidden' : 'visible';
-
-        infoBox.style.visibility = newVisibilityState;
-    }
 </script>
 
 </html>
