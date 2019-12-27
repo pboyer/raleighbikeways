@@ -39,7 +39,9 @@
                     <h2>Raleigh Bikeways</h2>
                     <span>This is a community built app to help you get around Raleigh while biking.
                         The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank"
-                            style="color: white;">Github</a>
+                            style="color: white;">Github</a>.  Please reach out to 
+                            <a href = "mailto: map@oaksandspokes.com" style="color: white;">map@oaksandspokes.com</a>
+                             with any questions or recommendations for improvement.
                     </span>
                 </div>
                 <br>
@@ -86,7 +88,8 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);"
-                            name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways<br>
+                            name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways
+                            <i class="material-icons md-18 noselect" onclick="document.getElementById('marginal-greenway-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
@@ -136,7 +139,7 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                            name="programmed-bike-facilities-layer">Planned Bikeways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
@@ -147,7 +150,7 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                            name="programmed-bike-facilities-dashed-layer">Planned Recommended Paths<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
@@ -160,7 +163,8 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
+                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations
+                        <i class="material-icons md-18 noselect" onclick="document.getElementById('citrix-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="24" width="24" class="existing-legend">
@@ -172,6 +176,36 @@
         </div>
     </div>
     <div id="map"></div>
+    <div id="marginal-greenway-info-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="marginal-greenway-info" class="modal" onclick="event.stopPropagation()">
+            <div id="about">
+                <h2>Marginal Greenways</h2>
+                <span>
+                    We have set marginal greenways to be any greenway that is unpaved or less than 7 feet wide.
+                </span>
+                <br>
+                <img src="img/marginal-greenway-1.jpg" width="300"/>
+                <img src="img/marginal-greenway-2.jpg" width="300"/>
+            </div>
+            <br>
+        </div>
+    </div>
+    <div id="citrix-info-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="citrix-info" class="modal" onclick="event.stopPropagation()">
+            <div id="about">
+                <h2>Citrix Cycle</h2>
+                <span>
+                    Raleigh's docked bike share programming, including some electric assist bikes!  Find out more at 
+                    <a href="citrixcycle.com">citrixcycle.com</a>
+                </span>
+                <br>
+                <img src="img/citrix.jpg" width="500"/>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
 </body>
 
 <script>
@@ -502,7 +536,9 @@
             'id': layers.PROGRAMMED,
             'type': 'line',
             'source': sources.PROGRAMMED_FACILITIES,
-            'layout': {},
+            'layout': {
+                'visibility': 'none',
+            },
             'paint': {
                 'line-color': [
                     'match',
@@ -541,7 +577,9 @@
             'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
             'source': sources.PROGRAMMED_FACILITIES,
-            'layout': {},
+            'layout': {
+                'visibility': 'none',
+            },
             'paint': {
                 'line-color': [
                     'match',
@@ -670,6 +708,7 @@
             'paint': {
                 'line-color': colors.GREENWAY_DETOUR,
                 'line-width': 1.5,
+                'line-dasharray': [1, 2],
             }
         })
 
