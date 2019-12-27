@@ -139,7 +139,7 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="programmed-bike-facilities-layer" checked>Planned Bikeways<br>
+                            name="programmed-bike-facilities-layer">Planned Bikeways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
@@ -150,7 +150,7 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="programmed-bike-facilities-dashed-layer" checked>Planned Recommended Paths<br>
+                            name="programmed-bike-facilities-dashed-layer">Planned Recommended Paths<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
@@ -521,7 +521,9 @@
             'id': layers.PROGRAMMED,
             'type': 'line',
             'source': sources.PROGRAMMED_FACILITIES,
-            'layout': {},
+            'layout': {
+                'visibility': 'none',
+            },
             'paint': {
                 'line-color': [
                     'match',
@@ -560,7 +562,9 @@
             'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
             'source': sources.PROGRAMMED_FACILITIES,
-            'layout': {},
+            'layout': {
+                'visibility': 'none',
+            },
             'paint': {
                 'line-color': [
                     'match',
