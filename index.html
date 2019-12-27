@@ -163,7 +163,8 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations<br>
+                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations
+                        <i class="material-icons md-18 noselect" onclick="document.getElementById('citrix-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="24" width="24" class="existing-legend">
@@ -185,6 +186,20 @@
                 <br>
                 <img src="img/marginal-greenway-1.jpg" width="300"/>
                 <img src="img/marginal-greenway-2.jpg" width="300"/>
+            </div>
+            <br>
+        </div>
+    </div>
+    <div id="citrix-info-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="citrix-info" class="modal" onclick="event.stopPropagation()">
+            <div id="about">
+                <h2>Citrix Cycle</h2>
+                <span>
+                    Raleigh's docked bike share programming, including some electric assist bikes!  Find out more at 
+                    <a href="citrixcycle.com">citrixcycle.com</a>
+                </span>
+                <br>
+                <img src="img/citrix.jpg" width="500"/>
             </div>
             <br>
         </div>

@@ -89,6 +89,7 @@ body {
 
 .modal img {
     padding: 5px;
+    padding-top: 15px;
     max-width: 95%;
 }
 
