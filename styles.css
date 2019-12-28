@@ -157,6 +157,13 @@ body {
     width: fit-content;
 }
 
+/* This is to allow us to put the new icons over
+parts of the navigation control but not all.
+Otherwise the parent z-index makes things difficult */
+.mapboxgl-ctrl-top-left {
+    z-index: unset !important;
+}
+
 #existing {
     background: #eee;
     color: black;
