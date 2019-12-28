@@ -144,7 +144,7 @@ body {
 
 #direction-buttons {
     position: relative;
-    z-index: 2;
+    z-index: 5;
     margin-top: 95px;
     margin-left: 200px;
     width: fit-content;
