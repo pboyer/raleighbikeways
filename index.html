@@ -317,6 +317,8 @@
         zoom: 12
     });
 
+    map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
+
     const geolocateControl = new mapboxgl.GeolocateControl({
         positionOptions: {
             enableHighAccuracy: true,
@@ -332,8 +334,6 @@
     })
 
     map.addControl(geolocateControl, 'bottom-right');
-
-    map.addControl(new mapboxgl.NavigationControl());
 
     let showingDirections = false;
     let showingDirectionsSection = false;
