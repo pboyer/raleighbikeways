@@ -75,6 +75,7 @@
         </div>
     </div>
     <div id="direction-buttons" style="display: none;">
+        <i class="material-icons md-48 md-light noselect" id="curr-location-nav" onclick="setNavOrigin()">my_location</i>
         <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
         <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">explore_off</i>
     </div>
@@ -316,9 +317,12 @@
         zoom: 12
     });
 
+    map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
+
     const geolocateControl = new mapboxgl.GeolocateControl({
         positionOptions: {
-            enableHighAccuracy: true
+            enableHighAccuracy: true,
+            maximumAge: 1000,
         },
         trackUserLocation: true
     })
@@ -326,12 +330,10 @@
     let lastFoundPosition;
 
     geolocateControl.on('geolocate', (geoPos) => {
-        lastFoundPosition = [geoPos.coords.longitude, geoPos.coords.latitude]
+        lastFoundPosition = [geoPos.coords.longitude, geoPos.coords.latitude];
     })
 
     map.addControl(geolocateControl, 'bottom-right');
-
-    map.addControl(new mapboxgl.NavigationControl());
 
     let showingDirections = false;
     let showingDirectionsSection = false;
@@ -812,6 +814,25 @@
             directionContol.interactive(true);
             showingDirectionsSection = true;
         }
+    }
+
+    function setNavOrigin() {
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 1000,
+        };
+        navigator.geolocation.getCurrentPosition(
+        (geoPos) => {
+            var currPosition = [geoPos.coords.longitude, geoPos.coords.latitude];
+            directionContol.setOrigin(currPosition);
+        },
+        (err) => {
+            console.warn("Error finding position: " + err.message);
+            if (lastFoundPosition) {
+                directionContol.setOrigin(lastFoundPosition);
+            }
+        },options);
     }
 
 </script>
