@@ -254,6 +254,7 @@
         CARY_BIKES: "cary-bikes-layer",
         CARY_BIKES_DASHED: "cary-bikes-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
+        UMSTEAD: 'umstead-trails-layer'
     }
 
     const sources = {
@@ -264,6 +265,7 @@
         EXISTING_FACILITIES: "existing-bike-facilities",
         PROGRAMMED_FACILITIES: "programmed-bike-facilities",
         CITRIX: "citrix-cycle-stations",
+        UMSTEAD: 'umstead-trails',
     }
 
     // Custom styling for the direction line
@@ -379,6 +381,7 @@
     let existingBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer/6';
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
     let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
+    let umsteadURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/BikeRaleigh_Map_2019_Online_WFL1/FeatureServer/13';
 
     // Create the query string. These are the minimum parameters needed to return valid GeoJSON of a dataset, but addtional parameters could be added to refine the query
     let queryParams = queryString({
@@ -402,7 +405,7 @@
         f: "geojson"
     });
 
-    let citrixQuery = queryString({
+    let citrixQueryParams = queryString({
         where: "status LIKE 'open'",
         outSR: 4326,
         outFields: "*",
@@ -415,8 +418,9 @@
     let caryBikeQuery = `${caryBikeURL}/query?${caryBikeQueryParams}`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
-    let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQuery}`;
-    let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson'
+    let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQueryParams}`;
+    let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson';
+    let umsteadQuery = `${umsteadURL}/query?${queryParams}`;
 
     map.on('load', () => {
 
@@ -721,7 +725,7 @@
         map.addSource(sources.GREENWAY_DETOUR, {
             'type': 'geojson',
             'data': greenwayDetourQuery,
-        })
+        });
 
         map.addLayer({
             'id': layers.GREENWAY_DETOUR,
@@ -733,7 +737,26 @@
                 'line-width': 1.5,
                 'line-dasharray': [1, 2],
             }
-        })
+        });
+
+        map.addSource(sources.UMSTEAD, {
+            'type': 'geojson',
+            'data': umsteadQuery,
+        });
+
+        map.addLayer({
+            'id': layers.UMSTEAD,
+            'type': 'line',
+            'source': sources.UMSTEAD,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-dasharray': [1, 2],
+            }
+        });
+
+
 
         map.addSource(sources.CARY_GREENWAY, {
             'type': 'geojson',
