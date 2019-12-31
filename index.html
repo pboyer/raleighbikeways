@@ -26,11 +26,11 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-142487885-3"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'UA-142487885-3');
+        gtag('config', 'UA-142487885-3');
     </script>
 </head>
 
@@ -49,9 +49,9 @@
                     <h2>Raleigh Bikeways</h2>
                     <span>This is a community built app to help you get around Raleigh while biking.
                         The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank"
-                            style="color: white;">Github</a>.  Please reach out to 
-                            <a href = "mailto: map@oaksandspokes.com" style="color: white;">map@oaksandspokes.com</a>
-                             with any questions or recommendations for improvement.
+                            style="color: white;">Github</a>. Please reach out to
+                        <a href="mailto: map@oaksandspokes.com" style="color: white;">map@oaksandspokes.com</a>
+                        with any questions or recommendations for improvement.
                     </span>
                 </div>
                 <br>
@@ -75,7 +75,8 @@
         </div>
     </div>
     <div id="direction-buttons" style="display: none;">
-        <i class="material-icons md-48 md-light noselect" id="curr-location-nav" onclick="setNavOrigin()">my_location</i>
+        <i class="material-icons md-48 md-light noselect" id="curr-location-nav"
+            onclick="setNavOrigin()">my_location</i>
         <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
         <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">explore_off</i>
     </div>
@@ -87,7 +88,8 @@
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);legendToggleLayer(this,layers.RALEIGH_GREENWAY_SYMBOL);"
+                        <input type="checkbox" class="legend-checkbox"
+                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);legendToggleLayer(this,layers.RALEIGH_GREENWAY_SYMBOL);"
                             name="existing-raleigh-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
@@ -98,9 +100,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);"
+                        <input type="checkbox" class="legend-checkbox"
+                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);"
                             name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways
-                            <i class="material-icons md-18 noselect" onclick="document.getElementById('marginal-greenway-info-container').style.display='block'">info</i>
+                        <i class="material-icons md-18 noselect"
+                            onclick="document.getElementById('marginal-greenway-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
@@ -125,7 +129,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
+                        <input type="checkbox" class="legend-checkbox"
+                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
                             name="existing-bike-facilities-layer" checked>Bikeways<br>
                     </td>
                     <td>
@@ -136,7 +141,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES_DASHED);"
+                        <input type="checkbox" class="legend-checkbox"
+                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES_DASHED);"
                             name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
                     </td>
                     <td>
@@ -175,7 +181,8 @@
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
                             name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations
-                        <i class="material-icons md-18 noselect" onclick="document.getElementById('citrix-info-container').style.display='block'">info</i>
+                        <i class="material-icons md-18 noselect"
+                            onclick="document.getElementById('citrix-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="24" width="24" class="existing-legend">
@@ -187,7 +194,8 @@
         </div>
     </div>
     <div id="map"></div>
-    <div id="marginal-greenway-info-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+    <div id="marginal-greenway-info-container" class="modal-container" onclick="this.style.display='none'"
+        style="display: none;">
         <div id="marginal-greenway-info" class="modal" onclick="event.stopPropagation()">
             <div id="about">
                 <h2>Marginal Greenways</h2>
@@ -195,8 +203,8 @@
                     We have set marginal greenways to be any greenway that is unpaved or less than 7 feet wide.
                 </span>
                 <br>
-                <img src="img/marginal-greenway-1.jpg" width="300"/>
-                <img src="img/marginal-greenway-2.jpg" width="300"/>
+                <img src="img/marginal-greenway-1.jpg" width="300" />
+                <img src="img/marginal-greenway-2.jpg" width="300" />
             </div>
             <br>
         </div>
@@ -206,16 +214,16 @@
             <div id="about">
                 <h2>Citrix Cycle</h2>
                 <span>
-                    Raleigh's docked bike share programming, including some electric assist bikes!  Find out more at 
+                    Raleigh's docked bike share programming, including some electric assist bikes! Find out more at
                     <a href="https://www.citrixcycle.com" target="_blank">citrixcycle.com</a>
                 </span>
                 <br>
-                <img src="img/citrix.jpg" width="500"/>
+                <img src="img/citrix.jpg" width="500" />
             </div>
             <br>
         </div>
     </div>
-</div>
+    </div>
 
 </body>
 
@@ -317,7 +325,7 @@
         zoom: 12
     });
 
-    map.addControl(new mapboxgl.NavigationControl(),'bottom-right');
+    map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
     const geolocateControl = new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -388,8 +396,7 @@
     });
 
     let caryBikeQueryParams = queryString({
-        // ObjectID 645 is a bad apple that causes the GeoJSON call to return a 400
-        where: "STATUS LIKE 'EXISTING' AND OBJECTID <> 645",
+        where: "STATUS LIKE 'EXISTING'",
         outSR: 4326,
         outFields: "*",
         f: "geojson"
@@ -511,9 +518,9 @@
                 'line-color': colors.EXISTING,
                 'line-width': [
                     "match",
-                    ['get','FACILTYTYPE'],
-                    ['STRIPED'],1.5,
-                    ['PROTECTED BIKE LANES'],2,
+                    ['get', 'FACILTYTYPE'],
+                    ['STRIPED'], 1.5,
+                    ['PROTECTED BIKE LANES'], 2,
                     0
                 ],
 
@@ -529,14 +536,14 @@
                 'line-color': colors.EXISTING,
                 'line-width': [
                     "match",
-                    ['get','FACILTYTYPE'],
-                    ['STRIPED','PROTECTED BIKE LANES'],0,
+                    ['get', 'FACILTYTYPE'],
+                    ['STRIPED', 'PROTECTED BIKE LANES'], 0,
                     1.5
                 ],
                 'line-opacity': [
                     "match",
-                    ['get','SPEEDLIMIT'],
-                    ["25","25 MPH"],1,
+                    ['get', 'SPEEDLIMIT'],
+                    ["25", "25 MPH"], 1,
                     0
                 ],
                 'line-dasharray': [1, 2]
@@ -644,18 +651,18 @@
             'paint': {
                 'line-color': [
                     'match',
-                        ['get', 'GWSTATUS'],
-                        "CLOSED_TEMP",colors.GREENWAY_CLOSED,
-                        colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
+                    ['get', 'GWSTATUS'],
+                    "CLOSED_TEMP", colors.GREENWAY_CLOSED,
+                    colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
                 ],
                 'line-width': 1.5,
                 'line-opacity': [
                     'case',
                     //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / natural
                     ["all",
-                        ['>', ['get','WIDTH_FT'],6],
-                        ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
-                    ],1,
+                        ['>', ['get', 'WIDTH_FT'], 6],
+                        ["match", ["get", "MATERIAL"], ["Natural", "Gravel"], false, true]
+                    ], 1,
                     0,
                 ],
             }
@@ -666,7 +673,7 @@
             'type': 'symbol',
             'source': sources.RALEIGH_GREENWAY,
             'layout': {
-                'text-field': [                       
+                'text-field': [
                     'match',
                     ['get', 'GWSTATUS'],
                     "CLOSED_TEMP", "X",
@@ -693,18 +700,18 @@
             'paint': {
                 'line-color': [
                     'match',
-                        ['get', 'GWSTATUS'],
-                        "CLOSED_TEMP",colors.GREENWAY_CLOSED,
-                        colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
+                    ['get', 'GWSTATUS'],
+                    "CLOSED_TEMP", colors.GREENWAY_CLOSED,
+                    colors.GREENWAY // We are leaving the alert status as normal, as it seems it should still be passable,
                 ],
                 'line-width': 1.5,
                 'line-opacity': [
-                'case',
+                    'case',
                     //This will only show if the width is less than or equal to 6 feet OR the path material is gravel / natural
                     ["all",
-                        ['>', ['get','WIDTH_FT'],6],
-                        ["match",["get","MATERIAL"],["Natural","Gravel"],false,true] 
-                    ],0,
+                        ['>', ['get', 'WIDTH_FT'], 6],
+                        ["match", ["get", "MATERIAL"], ["Natural", "Gravel"], false, true]
+                    ], 0,
                     1,
                 ],
                 'line-dasharray': [1, 2]
@@ -745,9 +752,9 @@
                     'case',
                     //This will only show if the width is greater than 6 feet AND the path material is NOT gravel / aggregate / limestone
                     ["all",
-                        ['>', ['get','WIDTH'],6],
-                        ["match",["get","SURFTYPE"],["Aggregate","Limestone","Gravel"],false,true] 
-                    ],1,
+                        ['>', ['get', 'WIDTH'], 6],
+                        ["match", ["get", "SURFTYPE"], ["Aggregate", "Limestone", "Gravel"], false, true]
+                    ], 1,
                     0,
                 ]
             }
@@ -764,9 +771,9 @@
                 'line-opacity': [
                     'case',
                     ["all",
-                        ['>', ['get','WIDTH'],6],
-                        ["match",["get","SURFTYPE"],["Aggregate","Limestone","Gravel"],false,true] 
-                    ],0,
+                        ['>', ['get', 'WIDTH'], 6],
+                        ["match", ["get", "SURFTYPE"], ["Aggregate", "Limestone", "Gravel"], false, true]
+                    ], 0,
                     1,
                 ],
                 'line-dasharray': [1, 2]
@@ -793,7 +800,7 @@
         map.resize();
     });
 
-    function legendToggleLayer(ele,layerName) {
+    function legendToggleLayer(ele, layerName) {
         var layerName = layerName || ele.name;
         var visibilityState = ele.checked ? 'visible' : 'none';
 
@@ -823,16 +830,16 @@
             maximumAge: 1000,
         };
         navigator.geolocation.getCurrentPosition(
-        (geoPos) => {
-            var currPosition = [geoPos.coords.longitude, geoPos.coords.latitude];
-            directionContol.setOrigin(currPosition);
-        },
-        (err) => {
-            console.warn("Error finding position: " + err.message);
-            if (lastFoundPosition) {
-                directionContol.setOrigin(lastFoundPosition);
-            }
-        },options);
+            (geoPos) => {
+                var currPosition = [geoPos.coords.longitude, geoPos.coords.latitude];
+                directionContol.setOrigin(currPosition);
+            },
+            (err) => {
+                console.warn("Error finding position: " + err.message);
+                if (lastFoundPosition) {
+                    directionContol.setOrigin(lastFoundPosition);
+                }
+            }, options);
     }
 
 </script>
