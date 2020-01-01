@@ -248,8 +248,10 @@
         RALEIGH_GREENWAY: "existing-raleigh-greenways-layer",
         RALEIGH_GREENWAY_DASHED: "existing-raleigh-greenways-dashed-layer",
         RALEIGH_GREENWAY_SYMBOL: "raleigh-greenway-symbol-layer",
+        RALEIGH_GREENWAY_NAME: "raleigh-greenway-name-layer",
         CARY_GREENWAY: "cary-greenways-layer",
         CARY_GREENWAY_DASHED: "cary-greenways-dashed-layer",
+        CARY_GREENWAY_NAME: "cary-greenway-name-layer",
         GREENWAY_DETOUR: "greenway-detour-layer",
         CARY_BIKES: "cary-bikes-layer",
         CARY_BIKES_DASHED: "cary-bikes-dashed-layer",
@@ -692,6 +694,21 @@
             },
         });
 
+        map.addLayer({
+            'id': layers.RALEIGH_GREENWAY_NAME,
+            'type': 'symbol',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {
+                'text-field': ['get', 'TRAIL_NAME'],
+                'symbol-placement': 'line',
+                'text-size': 14,
+            },
+            'paint': {
+                'text-color': colors.GREENWAY,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
+        });
 
         // We are using greenway width as a guess as to how bikable a section
         // of greenway is.  If it is less than 7 ft wide we assume it is not easily bikeable
@@ -803,6 +820,21 @@
             }
         });
 
+        map.addLayer({
+            'id': layers.CARY_GREENWAY_NAME,
+            'type': 'symbol',
+            'source': sources.CARY_GREENWAY,
+            'layout': {
+                'text-field': ['get', 'NAME'],
+                'symbol-placement': 'line',
+                'text-size': 14,
+            },
+            'paint': {
+                'text-color': colors.GREENWAY,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
+        });
 
         map.addSource(sources.CITRIX, {
             'type': 'geojson',
