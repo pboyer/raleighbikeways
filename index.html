@@ -37,54 +37,33 @@
 <body>
     <div id="header">
         <div id="title">Raleigh Bikeways</div>
-        <div id=info-icon onclick="document.getElementById('info-box-container').style.display='block'">
+        <div id="info-icon-container" onclick="document.getElementById('info-box-container').style.display='block'">
             <i class="material-icons md-36 noselect">info</i>
         </div>
-        <div id="legend-icon-container" onclick="document.getElementById('legend-box-container').style.display='block'">
-            <i class="material-icons md-36 noselect">layers</i>
-        </div>
-        <div id="info-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
-            <div id="info-box" class="modal" onclick="event.stopPropagation()">
-                <div id="about">
-                    <h2>Raleigh Bikeways</h2>
-                    <span>This is a community built app to help you get around Raleigh while biking.
-                        The code lives on <a href="https://github.com/pboyer/raleighbikeways" target="_blank"
-                            style="color: white;">Github</a>. Please reach out to
-                        <a href="mailto: map@oaksandspokes.com" style="color: white;">map@oaksandspokes.com</a>
-                        with any questions or recommendations for improvement.
-                    </span>
-                </div>
-                <br>
-                <div id="sources">
-                    <h2>Sources (all from municipal data)</h2>
-                    <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer"
-                        target="_blank">Existing Raleigh Bike Infrastructure</a>
-                    <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer"
-                        target="_blank">Programmed Raleigh Bike Infrastructure</a>
-                    <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Greenway_Trails_All/FeatureServer"
-                        target="_blank">Raleigh Greenways</a>
-                    <br>
-                    <a href="https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer"
-                        target="_blank">Citrix Cycle Stations</a>
-                    <br>
-                </div>
-            </div>
+        <div id="feedback-icon-container">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeROy90gU_08wwKrasKIGHE4b-uOOUdohYK6ClDtKLd4zvQ1Q/viewform?usp=sf_link"
+                target="_blank">
+                <i class=" material-icons md-36 noselect">feedback</i>
+            </a>
         </div>
     </div>
     <div id="direction-buttons" style="display: none;">
         <i class="material-icons md-48 md-light noselect" id="curr-location-nav"
             onclick="setNavOrigin()">my_location</i>
         <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
-        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">explore_off</i>
+        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">visibility_off</i>
     </div>
     <div id="show-directions-container">
         <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">navigation</i>
     </div>
-    <div id="legend-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
-        <div id="legend-box" class="modal" onclick="event.stopPropagation()">
+    <div id="info-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="info-box" class="modal" onclick="event.stopPropagation()">
+            <div><b>Raleigh Bikeways</b></div>
+            <div>An
+                <a href="https://github.com/oaksandspokes/raleighbikeways" target="_blank">open</a> source
+                <a href="https://oaksandspokes.com" target="_blank">community</a>
+                built bike navigation site built on open data to help you get around on a bike.
+            </div>
             <table>
                 <tr>
                     <td>
