@@ -93,46 +93,38 @@ body {
     max-width: 95%;
 }
 
-#info-icon {
+#info-icon-container {
     float: right;
     cursor: pointer;
     color: #444;
     padding: 17px 4px 17px 4px;
 }
 
-#info-box a {
-    color: white;
-}
-
-#info-box a:hover {
-    color: #000;
-}
-
-#legend-icon-container {
+#feedback-icon-container {
     width: fit-content;
     float: right;
     cursor: pointer;
     padding: 17px 8px 17px 8px;
 }
 
-#legend-icon-container > i {
-    cursor: pointer;
+#feedback-icon-container > a {
+    color: #444;
 }
 
-#legend-box {
+#info-box {
     width: fit-content;
     height: fit-content;
-    /* background-color: gray; */
-    /* font-size: 16px; */
-    top: 150px;
+}
+#info-box table {
+    padding-top: 10px;
 }
 
-#legend-box td {
+#info-box td {
     padding-bottom: 10px;
     padding-left: 10px;
 }
 
-#legend-box .legend-checkbox{
+#info-box .legend-checkbox{
     transform: scale(1.5);
     margin-right: 20px;
     cursor: pointer;
