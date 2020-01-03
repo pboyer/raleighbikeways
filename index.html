@@ -40,12 +40,6 @@
         <div id="info-icon-container" onclick="document.getElementById('info-box-container').style.display='block'">
             <i class="material-icons md-36 noselect">info</i>
         </div>
-        <div id="feedback-icon-container">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeROy90gU_08wwKrasKIGHE4b-uOOUdohYK6ClDtKLd4zvQ1Q/viewform?usp=sf_link"
-                target="_blank">
-                <i class=" material-icons md-36 noselect">feedback</i>
-            </a>
-        </div>
     </div>
     <div id="direction-buttons" style="display: none;">
         <i class="material-icons md-48 md-light noselect" id="curr-location-nav"
@@ -58,7 +52,11 @@
     </div>
     <div id="info-box-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
         <div id="info-box" class="modal" onclick="event.stopPropagation()">
-            <div><b>Raleigh Bikeways</b></div>
+            <div>
+                <b>Raleigh Bikeways</b>
+                <i class=" material-icons md-24 noselect close-button"
+                    onclick="document.getElementById('info-box-container').style.display='none'">close</i>
+            </div>
             <div>An
                 <a href="https://github.com/oaksandspokes/raleighbikeways" target="_blank">open</a> source
                 <a href="https://oaksandspokes.com" target="_blank">community</a>
@@ -170,6 +168,12 @@
                     </td>
                 </tr>
             </table>
+            <div id="feedback-button-container">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeROy90gU_08wwKrasKIGHE4b-uOOUdohYK6ClDtKLd4zvQ1Q/viewform?usp=sf_link"
+                    target="_blank" class="button">
+                    We Love Feedback!
+                </a>
+            </div>
         </div>
     </div>
     <div id="map"></div>
