@@ -82,8 +82,9 @@ body {
     z-index: 10;
     padding: 10px;
     background-color: gray;
-    top: 100px;
-    width: 60%;
+    top: 90px;
+    width: fit-content;
+    height: fit-content;
     font-size: 16px;
 }
 
@@ -97,24 +98,9 @@ body {
     float: right;
     cursor: pointer;
     color: #444;
-    padding: 17px 4px 17px 4px;
+    padding: 17px 10px 17px 4px;
 }
 
-#feedback-icon-container {
-    width: fit-content;
-    float: right;
-    cursor: pointer;
-    padding: 17px 8px 17px 8px;
-}
-
-#feedback-icon-container > a {
-    color: #444;
-}
-
-#info-box {
-    width: fit-content;
-    height: fit-content;
-}
 #info-box table {
     padding-top: 10px;
 }
@@ -124,10 +110,16 @@ body {
     padding-left: 10px;
 }
 
-#info-box .legend-checkbox{
+#info-box .legend-checkbox {
     transform: scale(1.5);
     margin-right: 20px;
     cursor: pointer;
+}
+
+#feedback-button-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .mapboxgl-ctrl-directions {
@@ -234,4 +226,22 @@ Otherwise the parent z-index makes things difficult */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome, Opera and Firefox */
+}
+
+.close-button {
+    float: right;
+}
+
+.button {
+    background-color: Crimson;  
+    border-radius: 5px;
+    color: white;
+    padding: .5em;
+    text-decoration: none;
+}
+  
+.button:focus,
+.button:hover {
+    background-color: FireBrick;
+    color: White;
 }
