@@ -245,9 +245,9 @@
         SMITH_GREENWAY: 'smith-greenway-layer',
         SMITH_GREENWAY_NAMES: 'smith-greenway-names-layer',
         CH_CARR_FACILITIES: 'chapel-hill-carrboro-facilities',
-        CH_CARR_FACILITIES_DASHED: 'chapel-hill-carrboro-facilities',
-        CH_CARR_GREENWAY: 'chapel-hill-carrboro-facilities',
-        CH_CARR_GREENWAY_DASHED: 'chapel-hill-carrboro-facilities',
+        CH_CARR_FACILITIES_DASHED: 'chapel-hill-carrboro-facilities-dashed',
+        CH_CARR_GREENWAY: 'chapel-hill-carrboro-greenway',
+        CH_CARR_GREENWAY_DASHED: 'chapel-hill-carrboro-greenway-dashed',
 
     }
 
@@ -459,6 +459,7 @@
     let mingoGreenwayQuery = `${mingoGreenwayURL}/query?${mingoGreenwayQueryParams}`;
     let smithCreekGreenwayQuery = `${smithCreekGreenwayURL}/query?${queryParams}`;
     // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
+    let chCarrboroQuery = 'https://gist.githubusercontent.com/jonathonwpowell/23679b5c11f8108bc1aecad157475a8f/raw/ch-carrboro-bike-facilities.geojson';
 
     map.on('load', () => {
 
@@ -839,27 +840,80 @@
             }
         });
 
-        // map.addSource(sources.CH_CARRBORO, {
-        //     'type': 'geojson',
-        //     'data': chCarrboroQuery
-        // });
+        map.addSource(sources.CH_CARRBORO, {
+            'type': 'geojson',
+            'data': chCarrboroQuery
+        });
 
-        // map.addLayer({
-        //     'id': layers.CH_CARR_FACILITIES,
-        //     'type': 'line',
-        //     'source': sources.CH_CARRBORO,
-        //     'layout': {},
-        //     'paint': {
-        //         'line-color': 'pink',
-        //         'line-width': 1.5,
-        //         'line-opacity': [
-        //             'match',
-        //             ['get', 'BikeFac'],
-        //             ['Bike Lane Both Sides', 'Bike Lane One Side', 'Sidepath'], 1,
-        //             0,
-        //         ]
-        //     }
-        // });
+        map.addLayer({
+            'id': layers.CH_CARR_FACILITIES,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Bike Lane - both sides of road', 'Bike Lane - one side of road', 'Sidepath'], 1,
+                    0,
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_FACILITIES_DASHED,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Sharrow'], 1,
+                    0,
+                ],
+                'line-dasharray': [1, 2],
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_GREENWAY,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Greenway - Paved',], 1,
+                    0,
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_GREENWAY_DASHED,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Greenway - Unpaved', 'Gravel Path', 'Trail'], 1,
+                    0,
+                ],
+                'line-dasharray': [1, 2],
+            }
+        });
 
         map.addSource(sources.CITRIX, {
             'type': 'geojson',
@@ -981,6 +1035,7 @@
         map.setLayoutProperty(layers.MINGO_GREENWAY, 'visibility', visibilityState);
         map.setLayoutProperty(layers.SMITH_GREENWAY, 'visibility', visibilityState);
         map.setLayoutProperty(layers.DURHAM_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_GREENWAY, 'visibility', visibilityState);
     }
 
     function legendToggleGreenwayDashedLayer(ele) {
@@ -990,6 +1045,7 @@
         map.setLayoutProperty(layers.RALEIGH_GREENWAY_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_GREENWAY_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.UMSTEAD, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_GREENWAY_DASHED, 'visibility', visibilityState);
     }
 
     function legendToggleFacilitiesLayer(ele, layerName) {
@@ -999,6 +1055,7 @@
         map.setLayoutProperty(layers.EXISTING, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_BIKES, 'visibility', visibilityState);
         map.setLayoutProperty(layers.DURHAM_FACILITIES, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_FACILITIES, 'visibility', visibilityState);
     }
 
     function legendToggleDashedFacilitiesLayer(ele, layerName) {
@@ -1008,6 +1065,7 @@
         map.setLayoutProperty(layers.EXISTING_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_BIKES_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.DURHAM_FACILITIES_DASHED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_FACILITIES_DASHED, 'visibility', visibilityState);
     }
 
     function toggleDirectionSection() {
