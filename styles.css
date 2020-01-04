@@ -141,6 +141,10 @@ body {
     width: fit-content;
 }
 
+.legend-info {
+    max-width: 600px;
+}
+
 /* This is to allow us to put the new icons over
 parts of the navigation control but not all.
 Otherwise the parent z-index makes things difficult */
@@ -189,6 +193,11 @@ Otherwise the parent z-index makes things difficult */
     padding-top: 5px;
 }
 
+.greenway-closed-legend {
+    stroke: #CC0000;
+    stroke-width: 8;
+    padding-top: 5px;
+}
 
 .greenway-detour-legend {
     stroke: yellow;
