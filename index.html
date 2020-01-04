@@ -77,6 +77,17 @@
                 </tr>
                 <tr>
                     <td>
+                        <input type="checkbox" class="legend-checkbox" onchange="" name="closed-greenways-layer"
+                            disabled style="visibility: hidden;">Closed Greenways<br>
+                    </td>
+                    <td>
+                        <svg height="10" width="100" class="greenway-closed-legend">
+                            <line x1="0" y1="5" x2="100" y2="5" />
+                        </svg>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <input type="checkbox" class="legend-checkbox"
                             onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);legendToggleLayer(this,layers.UMSTEAD);"
                             name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways
@@ -94,7 +105,9 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="greenway-detour-layer" checked>Greenway Detours<br>
+                            name="greenway-detour-layer" checked />Greenway Detours
+                        <i class="material-icons md-18 noselect"
+                            onclick="document.getElementById('greenway-detour-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-detour-legend">
@@ -108,7 +121,9 @@
                     <td>
                         <input type="checkbox" class="legend-checkbox"
                             onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
-                            name="existing-bike-facilities-layer" checked>Bikeways<br>
+                            name="existing-bike-facilities-layer" checked>Bike lanes / Sidepaths
+                        <i class="material-icons md-18 noselect"
+                            onclick="document.getElementById('bike-lane-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="10" width="100" class="existing-legend">
@@ -120,7 +135,9 @@
                     <td>
                         <input type="checkbox" class="legend-checkbox"
                             onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES_DASHED);"
-                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths<br>
+                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths
+                        <i class="material-icons md-18 noselect"
+                            onclick="document.getElementById('recommended-info-container').style.display='block'">info</i>
                     </td>
                     <td>
                         <svg height="10" width="100" class="existing-legend">
@@ -179,7 +196,7 @@
     <div id="map"></div>
     <div id="marginal-greenway-info-container" class="modal-container" onclick="this.style.display='none'"
         style="display: none;">
-        <div id="marginal-greenway-info" class="modal" onclick="event.stopPropagation()">
+        <div id="marginal-greenway-info" class="modal legend-info" onclick="event.stopPropagation()">
             <div id="about">
                 <h2>Marginal Greenways</h2>
                 <span>
@@ -192,8 +209,50 @@
             <br>
         </div>
     </div>
+    <div id="greenway-detour-info-container" class="modal-container" onclick="this.style.display='none'"
+        style="display: none;">
+        <div id="greenway-detour-info" class="modal legend-info" onclick="event.stopPropagation()">
+            <div id="about">
+                <h2>Greenway Detours</h2>
+                <span>
+                    Community recommended ways to avoid greenway closures. These may take you on sidewalks, bike lanes,
+                    or calm neighborhoods.
+                    Find out more about greenway closures in Raleigh from the <a
+                        href="https://raleighnc.gov/home/content/PRecDesignDevelop/Articles/GreenwayRepairs.html"
+                        target="_blank">city.</a>
+                </span>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div id="bike-lane-info-container" class="modal-container" onclick="this.style.display='none'"
+        style="display: none;">
+        <div id="bike-lane-info" class="modal legend-info" onclick="event.stopPropagation()">
+            <div id="about">
+                <h2>Bike Lanes / Side Paths</h2>
+                <span>
+                    Bike lanes on the road, as well as side paths next to the road
+                </span>
+                <br>
+                <img src="img/sidepath.jpg" width="300" />
+            </div>
+        </div>
+    </div>
+    <div id="recommended-info-container" class="modal-container" onclick="this.style.display='none'"
+        style="display: none;">
+        <div id="recommended-info" class="modal legend-info" onclick="event.stopPropagation()">
+            <div id="about">
+                <h2>Recommended Paths</h2>
+                <span>
+                    Roads without dedicated bike infrastructure, but found to be fairly comfortable to bike on.
+                    Generally they have a speed limit of 25 mph or less with low traffic volumes.
+                </span>
+                <br>
+            </div>
+        </div>
+    </div>
     <div id="citrix-info-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
-        <div id="citrix-info" class="modal" onclick="event.stopPropagation()">
+        <div id="citrix-info" class="modal legend-info" onclick="event.stopPropagation()">
             <div id="about">
                 <h2>Citrix Cycle</h2>
                 <span>
