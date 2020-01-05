@@ -44,7 +44,6 @@
     <div id="direction-buttons" style="display: none;">
         <i class="material-icons md-48 md-light noselect" id="curr-location-nav"
             onclick="setNavOrigin()">my_location</i>
-        <i class="material-icons md-48 md-light noselect" onclick="directionContol.removeRoutes()">remove_circle</i>
         <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">visibility_off</i>
     </div>
     <div id="show-directions-container">
@@ -387,6 +386,13 @@
 
     geolocateControl.on('geolocate', (geoPos) => {
         lastFoundPosition = [geoPos.coords.longitude, geoPos.coords.latitude];
+    })
+
+    geolocateControl.on('error', (err) => {
+        console.warn(err.message);
+        if (err.code == 1) {
+            window.alert("Geolocation permission was denied, please enable to use")
+        }
     })
 
     map.addControl(geolocateControl, 'bottom-right');
@@ -937,7 +943,10 @@
                 console.warn("Error finding position: " + err.message);
                 if (lastFoundPosition) {
                     directionContol.setOrigin(lastFoundPosition);
-                }
+                };
+                if (err.code == 1) {
+                    window.alert("Geolocation permission was denied, please enable to use")
+                };
             }, options);
     }
 
