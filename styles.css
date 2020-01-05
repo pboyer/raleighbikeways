@@ -7,7 +7,7 @@ body {
 
 #map {
     position: absolute;
-    top: 75px;
+    top: 50px;
     bottom: 0px;
     width: 100%;
 }
@@ -15,14 +15,14 @@ body {
 #header {
     position: flex;
     top: 0;
-    height: 75px;
+    height: 50px;
     width: 100%;
     background: whitesmoke;
 }
 
 #title {
     display: inline-block;
-    padding: 20px 0px 20px 10px;
+    padding: 10px 0px 10px 10px;
     font-size: 28px;
 }
 
@@ -82,7 +82,7 @@ body {
     z-index: 12;
     padding: 10px;
     background-color: gray;
-    top: 90px;
+    top: 70px;
     width: fit-content;
     height: fit-content;
     font-size: 16px;
@@ -98,7 +98,7 @@ body {
     float: right;
     cursor: pointer;
     color: #444;
-    padding: 17px 10px 17px 4px;
+    padding: 9px 10px 9px 4px;
 }
 
 #info-box table {
@@ -129,15 +129,15 @@ body {
 #direction-buttons {
     position: relative;
     z-index: 5;
-    margin-top: 95px;
-    margin-left: 155px;
+    margin-top: 98px;
+    margin-left: 220px;
     width: fit-content;
 }
 
 #show-directions-container {
     position: relative;
     z-index: 5;
-    margin: 30px;
+    margin: 10px;
     width: fit-content;
 }
 
@@ -181,22 +181,23 @@ Otherwise the parent z-index makes things difficult */
 }
 
 .mapboxgl-ctrl-group > button{
-    width: 40px !important;
-    height: 40px !important;
+    width: 30px !important;
+    height: 30px !important;
 }
 
 .mapboxgl-ctrl-geolocate > button{
-    width: 40px !important;
-    height: 40px !important;
+    width: 30px !important;
+    height: 30px !important;
 }
 
 .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-group {
-    margin: 0 30px 30px 0 !important;
+    /* margin: 0 20px 20px 0 !important; */
+    margin-bottom: 20px !important;
 }
 
-.mapboxgl-ctrl-top-right .mapboxgl-ctrl {
+/* .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
     margin: 30px 30px 0 0 !important;
-}
+} */
 
 .greenway-legend {
     stroke: #28B463;

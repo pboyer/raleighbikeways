@@ -42,9 +42,9 @@
         </div>
     </div>
     <div id="direction-buttons" style="display: none;">
-        <i class="material-icons md-48 md-light noselect" id="curr-location-nav"
+        <i class="material-icons md-36 md-light noselect" id="curr-location-nav"
             onclick="setNavOrigin()">my_location</i>
-        <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">visibility_off</i>
+        <i class=" material-icons md-36 md-light noselect" onclick="toggleDirectionSection()">visibility_off</i>
     </div>
     <div id="show-directions-container">
         <i class=" material-icons md-48 md-light noselect" onclick="toggleDirectionSection()">navigation</i>
@@ -945,7 +945,7 @@
                     directionContol.setOrigin(lastFoundPosition);
                 };
                 if (err.code == 1) {
-                    window.alert("Geolocation permission was denied, please enable to use")
+                    window.alert("Access to the devices location was blocked, please enable to use location services.")
                 };
             }, options);
     }
