@@ -69,8 +69,8 @@
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleGreenwayLayer(this);"
-                            name="existing-raleigh-greenways-layer" checked>Greenways<br>
+                        <input id="greenway-checkbox" type="checkbox" class="legend-checkbox" onchange="legendToggleGreenwayLayer(this.checked);"
+                            checked>Greenways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="greenway-legend">
@@ -91,8 +91,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleGreenwayDashedLayer(this);"
-                            name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways
+                        <input id="greenway-dashed-checkbox" type="checkbox" class="legend-checkbox" onchange="legendToggleGreenwayDashedLayer(this.checked);"
+                            checked>Marginal Greenways
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('marginal-greenway-info-container').style.display='block'">info</i>
                     </td>
@@ -106,8 +106,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="greenway-detour-layer" checked />Greenway Detours
+                        <input id="greenway-detour-checkbox" type="checkbox" class="legend-checkbox" 
+                            onchange="legendToggleGreenwayDetourLayer(this.checked)" checked />Greenway Detours
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('greenway-detour-info-container').style.display='block'">info</i>
                     </td>
@@ -121,8 +121,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleFacilitiesLayer(this);"
-                            name="existing-bike-facilities-layer" checked>Bike lanes / Sidepaths
+                        <input id="facilities-checkbox" type="checkbox" class="legend-checkbox" onchange="legendToggleFacilitiesLayer(this.checked);"
+                            checked>Bike lanes / Sidepaths
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('bike-lane-info-container').style.display='block'">info</i>
                     </td>
@@ -134,9 +134,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox"
-                            onchange="legendToggleDashedFacilitiesLayer(this);"
-                            name="existing-bike-facilities-dashed-layer" checked>Recommended Paths
+                        <input id="facilities-dashed-checkbox" type="checkbox" class="legend-checkbox"
+                            onchange="legendToggleDashedFacilitiesLayer(this.checked);" checked>Recommended Paths
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('recommended-info-container').style.display='block'">info</i>
                     </td>
@@ -150,8 +149,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="programmed-bike-facilities-layer">Planned Bikeways<br>
+                        <input id="programmed-checkbox" type="checkbox" class="legend-checkbox" onchange="legendToggleProgrammedLayer(this.checked)"
+                            checked>Planned Bikeways<br>
                     </td>
                     <td>
                         <svg height="10" width="100" class="programmed-legend">
@@ -161,21 +160,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="programmed-bike-facilities-dashed-layer">Planned Recommended Paths<br>
-                    </td>
-                    <td>
-                        <svg height="10" width="100" class="programmed-legend">
-                            <line x1="0" y1="5" x2="20" y2="5" />
-                            <line x1="40" y1="5" x2="60" y2="5" />
-                            <line x1="80" y1="5" x2="100" y2="5" />
-                        </svg>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleLayer(this)"
-                            name="citrix-cycle-stations-layer" checked>Citrix Cycle Stations
+                        <input id="citrix-checkbox" type="checkbox" class="legend-checkbox" onchange="legendToggleCitrixLayer(this.checked)"
+                            checked>Citrix Cycle Stations
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('citrix-info-container').style.display='block'">info</i>
                     </td>
@@ -646,9 +632,7 @@
             'id': layers.PROGRAMMED,
             'type': 'line',
             'source': sources.PROGRAMMED_FACILITIES,
-            'layout': {
-                'visibility': 'none',
-            },
+            'layout': {},
             'paint': {
                 'line-color': colors.PROGRAMMED,
                 'line-width': [
@@ -670,9 +654,7 @@
             'id': layers.PROGRAMMED_DASHED,
             'type': 'line',
             'source': sources.PROGRAMMED_FACILITIES,
-            'layout': {
-                'visibility': 'none',
-            },
+            'layout': {},
             'paint': {
                 'line-color': [
                     'match',
@@ -1098,19 +1080,50 @@
             },
         });
 
+        // After the map has started loading and all the layers have been added
+        // we want to disable any layers the user previously removed
+        if (getCookie("hasOpened")) {
+            if (getCookie("hideGreenway") === "true") {
+                legendToggleGreenwayLayer(false);
+                document.getElementById('greenway-checkbox').checked = false;
+            }
+            if (getCookie("hideGreenwayDashed") === "true") {
+                legendToggleGreenwayDashedLayer(false);
+                document.getElementById('greenway-dashed-checkbox').checked = false;
+            }
+            if (getCookie("hideGreenwayDetour") === "true") {
+                legendToggleGreenwayDetourLayer(false);
+                document.getElementById('greenway-detour-checkbox').checked = false;
+            }
+            if (getCookie("hideFacilities") === "true") {
+                legendToggleFacilitiesLayer(false);
+                document.getElementById('facilities-checkbox').checked = false;
+            }
+            if (getCookie("hideFacilitiesDashed") === "true") {
+                legendToggleDashedFacilitiesLayer(false);
+                document.getElementById('facilities-dashed-checkbox').checked = false;
+            }
+            if (getCookie("hideCitrix") === "true") {
+                legendToggleCitrixLayer(false);
+                document.getElementById('citrix-checkbox').checked = false;
+            }
+            if (getCookie("hideProgrammed") === "true") {
+                legendToggleProgrammedLayer(false);
+                document.getElementById('programmed-checkbox').checked = false;
+            }
+        } else {
+            setCookie("hasOpened","true",1000);
+            // We default the programmed bike infra to not show
+            legendToggleProgrammedLayer(false);
+            document.getElementById('programmed-checkbox').checked = false;
+        }
+
         map.resize();
     });
 
-    function legendToggleLayer(ele, layerName) {
-        var layerName = layerName || ele.name;
-        var visibilityState = ele.checked ? 'visible' : 'none';
-
-        map.setLayoutProperty(layerName, 'visibility', visibilityState);
-    }
-
-    function legendToggleGreenwayLayer(ele) {
-        var layerName = layerName || ele.name;
-        var visibilityState = ele.checked ? 'visible' : 'none';
+    function legendToggleGreenwayLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideGreenway",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.RALEIGH_GREENWAY, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_GREENWAY, 'visibility', visibilityState);
@@ -1118,11 +1131,12 @@
         map.setLayoutProperty(layers.SMITH_GREENWAY, 'visibility', visibilityState);
         map.setLayoutProperty(layers.DURHAM_GREENWAY, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CH_CARR_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.RALEIGH_GREENWAY_SYMBOL, 'visibility', visibilityState);
     }
 
-    function legendToggleGreenwayDashedLayer(ele) {
-        var layerName = layerName || ele.name;
-        var visibilityState = ele.checked ? 'visible' : 'none';
+    function legendToggleGreenwayDashedLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideGreenwayDashed",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.RALEIGH_GREENWAY_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_GREENWAY_DASHED, 'visibility', visibilityState);
@@ -1130,9 +1144,16 @@
         map.setLayoutProperty(layers.CH_CARR_GREENWAY_DASHED, 'visibility', visibilityState);
     }
 
-    function legendToggleFacilitiesLayer(ele, layerName) {
-        var layerName = layerName || ele.name;
-        var visibilityState = ele.checked ? 'visible' : 'none';
+    function legendToggleGreenwayDetourLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideGreenwayDetour",(!isChecked).toString(),1000);
+
+        map.setLayoutProperty(layers.GREENWAY_DETOUR, 'visibility', visibilityState);
+    }
+
+    function legendToggleFacilitiesLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideFacilities",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.EXISTING, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_BIKES, 'visibility', visibilityState);
@@ -1140,14 +1161,29 @@
         map.setLayoutProperty(layers.CH_CARR_FACILITIES, 'visibility', visibilityState);
     }
 
-    function legendToggleDashedFacilitiesLayer(ele, layerName) {
-        var layerName = layerName || ele.name;
-        var visibilityState = ele.checked ? 'visible' : 'none';
+    function legendToggleDashedFacilitiesLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideFacilitiesDashed",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.EXISTING_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_BIKES_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.DURHAM_FACILITIES_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CH_CARR_FACILITIES_DASHED, 'visibility', visibilityState);
+    }
+
+    function legendToggleProgrammedLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideProgrammed",(!isChecked).toString(),1000);
+
+        map.setLayoutProperty(layers.PROGRAMMED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.PROGRAMMED_DASHED, 'visibility', visibilityState);
+    }
+
+    function legendToggleCitrixLayer(isChecked) {
+        var visibilityState = isChecked ? 'visible' : 'none';
+        setCookie("hideCitrix",(!isChecked).toString(),1000);
+
+        map.setLayoutProperty(layers.CITRIX, 'visibility', visibilityState);
     }
 
     function toggleDirectionSection() {
@@ -1186,6 +1222,27 @@
                     window.alert("Access to the devices location was blocked, please enable to use location services.")
                 };
             }, options);
+    }
+
+    function setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
     }
 
 
