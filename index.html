@@ -69,8 +69,7 @@
             <table>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox"
-                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY);legendToggleLayer(this,layers.RALEIGH_GREENWAY_SYMBOL);"
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleGreenwayLayer(this);"
                             name="existing-raleigh-greenways-layer" checked>Greenways<br>
                     </td>
                     <td>
@@ -92,8 +91,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox"
-                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_GREENWAY_DASHED);legendToggleLayer(this,layers.UMSTEAD);"
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleGreenwayDashedLayer(this);"
                             name="existing-raleigh-greenways-dashed-layer" checked>Marginal Greenways
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('marginal-greenway-info-container').style.display='block'">info</i>
@@ -123,8 +121,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="checkbox" class="legend-checkbox"
-                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES);"
+                        <input type="checkbox" class="legend-checkbox" onchange="legendToggleFacilitiesLayer(this);"
                             name="existing-bike-facilities-layer" checked>Bike lanes / Sidepaths
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('bike-lane-info-container').style.display='block'">info</i>
@@ -138,7 +135,7 @@
                 <tr>
                     <td>
                         <input type="checkbox" class="legend-checkbox"
-                            onchange="legendToggleLayer(this);legendToggleLayer(this,layers.CARY_BIKES_DASHED);"
+                            onchange="legendToggleDashedFacilitiesLayer(this);"
                             name="existing-bike-facilities-dashed-layer" checked>Recommended Paths
                         <i class="material-icons md-18 noselect"
                             onclick="document.getElementById('recommended-info-container').style.display='block'">info</i>
@@ -312,7 +309,19 @@
         CARY_BIKES: "cary-bikes-layer",
         CARY_BIKES_DASHED: "cary-bikes-dashed-layer",
         CITRIX: 'citrix-cycle-stations-layer',
-        UMSTEAD: 'umstead-trails-layer'
+        UMSTEAD: 'umstead-trails-layer',
+        DURHAM_FACILITIES: 'durham-facilities-layer',
+        DURHAM_FACILITIES_DASHED: 'durham-dashed-facilities-layer',
+        DURHAM_GREENWAY: 'durham-greenway-layer',
+        MINGO_GREENWAY: 'mingo-greenway-layer',
+        MINGO_GREENWAY_NAMES: 'mingo-greenway-names-layer',
+        SMITH_GREENWAY: 'smith-greenway-layer',
+        SMITH_GREENWAY_NAMES: 'smith-greenway-names-layer',
+        CH_CARR_FACILITIES: 'chapel-hill-carrboro-facilities',
+        CH_CARR_FACILITIES_DASHED: 'chapel-hill-carrboro-facilities-dashed',
+        CH_CARR_GREENWAY: 'chapel-hill-carrboro-greenway',
+        CH_CARR_GREENWAY_DASHED: 'chapel-hill-carrboro-greenway-dashed',
+
     }
 
     const sources = {
@@ -324,6 +333,11 @@
         PROGRAMMED_FACILITIES: "programmed-bike-facilities",
         CITRIX: "citrix-cycle-stations",
         UMSTEAD: 'umstead-trails',
+        DURHAM_SOLID: 'durham-solid',
+        DURHAM_DASHED: 'durham-dashed',
+        MINGO_GREENWAY: 'mingo-greenway',
+        SMITH_GREENWAY: 'smith-greenway',
+        CH_CARRBORO: 'chapel-hill-carrboro',
     }
 
     // Custom styling for the direction line
@@ -447,6 +461,10 @@
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
     let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
     let umsteadURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/BikeRaleigh_Map_2019_Online_WFL1/FeatureServer/13';
+    let durhamURL = 'https://webgis.durhamnc.gov/server/rest/services/OpenData/Bike_Facilities/MapServer/0';
+    let mingoGreenwayURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/BikeRaleigh_Map_2019_Online_WFL1/FeatureServer/7'
+    let smithCreekGreenwayURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/BikeRaleigh_Map_2019_Online_WFL1/FeatureServer/12'
+    // let chCarrboroURL = 'https://tocgis.ci.carrboro.nc.us/server/rest/services/SP/BikeSP/MapServer/0';
 
     // Create the query string. These are the minimum parameters needed to return valid GeoJSON of a dataset, but addtional parameters could be added to refine the query
     let queryParams = queryString({
@@ -477,6 +495,38 @@
         f: "geojson"
     });
 
+    // We split up solid & dashed for durham as otherwise we would be close to the ARCGIS 1000 item limit
+    let durhamSolidQueryParams = queryString({
+        // We are filtering out Objectid_1 18 - 20 as they are repeats of the American Tobacco Trail
+        // and they block the fact that it is not paved
+        where: "(Bike_Facil LIKE 'Multiuse Path' OR Bike_Facil LIKE 'Bicycle Lane' OR Bike_Facil LIKE 'Bicycle Lane - One Side') AND (OBJECTID_1 < 18 OR OBJECTID_1 > 20)",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
+
+    let durhamDashedQueryParams = queryString({
+        where: "Bike_Facil LIKE 'Shared Roadway'",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
+
+    // Some other data is in here, we only want the mingo creek greenway
+    let mingoGreenwayQueryParams = queryString({
+        where: "TRAIL_NAME LIKE 'Mingo Creek Greenway'",
+        outSR: 4326,
+        outFields: "*",
+        f: "geojson"
+    });
+
+    // let chCarrboroQueryParams = queryString({
+    //     where: "BikeFac IS NOT NULL",
+    //     outSR: 4326,
+    //     outFields: "*",
+    //     f: "geojson"
+    // });
+
     // Generate the full query URL
     let existingRaleighGreenwaysQuery = `${existingRaleighGreenwaysURL}/query?${queryParams}`;
     let caryGreenwaysQuery = `${caryGreenwaysURL}/query?${caryGreenwayQueryParams}`;
@@ -486,6 +536,12 @@
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQueryParams}`;
     let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson';
     let umsteadQuery = `${umsteadURL}/query?${queryParams}`;
+    let durhamSolidQuery = `${durhamURL}/query?${durhamSolidQueryParams}`;
+    let durhamDashedQuery = `${durhamURL}/query?${durhamDashedQueryParams}`;
+    let mingoGreenwayQuery = `${mingoGreenwayURL}/query?${mingoGreenwayQueryParams}`;
+    let smithCreekGreenwayQuery = `${smithCreekGreenwayURL}/query?${queryParams}`;
+    // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
+    let chCarrboroQuery = 'https://gist.githubusercontent.com/jonathonwpowell/23679b5c11f8108bc1aecad157475a8f/raw/ch-carrboro-bike-facilities.geojson';
 
     map.on('load', () => {
 
@@ -500,21 +556,7 @@
             'source': sources.EXISTING_FACILITIES,
             'layout': {},
             'paint': {
-                'line-color': [
-                    'match',
-                    ['get', 'Type'],
-                    'Bike Lane', colors.EXISTING,
-                    'Bike Lane/Shared Lane Markings', colors.EXISTING,
-                    'Buffered Bike Lane', colors.EXISTING,
-                    'Buffered Bike Lane/Bike Lane', colors.EXISTING,
-                    'Buffered Bike Lane/Shared Lane Markings', colors.EXISTING,
-                    'Separated Bike Lane', colors.EXISTING,
-                    'Multi-Use Path', colors.EXISTING,
-                    // 'Neighborhood Bikeway', 'green',
-                    // 'Shared Lane Markings', 'aqua',
-                    // 'Unknown', 'red',
-                    'grey'
-                ],
+                'line-color': colors.EXISTING,
                 'line-width': [
                     'match',
                     ['get', 'Type'],
@@ -525,9 +567,6 @@
                     'Buffered Bike Lane/Shared Lane Markings', 2,
                     'Separated Bike Lane', 2,
                     'Multi-Use Path', 1.5,
-                    // 'Neighborhood Bikeway', 1.5,
-                    // 'Shared Lane Markings', 1.5,
-                    // 'Unknown', 1.5,
                     0
                 ]
             }
@@ -539,32 +578,11 @@
             'source': sources.EXISTING_FACILITIES,
             'layout': {},
             'paint': {
-                'line-color': [
-                    'match',
-                    ['get', 'Type'],
-                    // 'Bike Lane', 'blue',
-                    // 'Bike Lane/Shared Lane Markings', 'cyan',
-                    // 'Buffered Bike Lane', 'magenta',
-                    // 'Buffered Bike Lane/Bike Lane', 'yellow',
-                    // 'Buffered Bike Lane/Shared Lane Markings', colors.EXISTING,
-                    // 'Separated Bike Lane', 'blue',
-                    'Neighborhood Bikeway', colors.EXISTING,
-                    // 'Multi-Use Path', colors.EXISTING,
-                    'Shared Lane Markings', colors.EXISTING,
-                    'Unknown', colors.EXISTING,
-                    'grey'
-                ],
+                'line-color': colors.EXISTING,
                 'line-width': [
                     'match',
                     ['get', 'Type'],
-                    // 'Bike Lane', 1.5,
-                    // 'Bike Lane/Shared Lane Markings', 1.5,
-                    // 'Buffered Bike Lane', 1.5,
-                    // 'Buffered Bike Lane/Bike Lane', 1.5,
-                    // 'Buffered Bike Lane/Shared Lane Markings', 1.5,
-                    // 'Separated Bike Lane', 1.5,
                     'Neighborhood Bikeway', 1.5,
-                    // 'Multi-Use Path', 1.5,
                     'Shared Lane Markings', 1.5,
                     'Unknown', 1.5,
                     0
@@ -632,21 +650,7 @@
                 'visibility': 'none',
             },
             'paint': {
-                'line-color': [
-                    'match',
-                    ['get', 'Type'],
-                    'Bike Lane', colors.PROGRAMMED,
-                    'Bike Lane/Shared Lane Markings', colors.PROGRAMMED,
-                    'Buffered Bike Lane', colors.PROGRAMMED,
-                    'Buffered Bike Lane/Bike Lane', colors.PROGRAMMED,
-                    'Buffered Bike Lane/Shared Lane Markings', colors.PROGRAMMED,
-                    'Separated Bike Lane', colors.PROGRAMMED,
-                    'Multi-Use Path', colors.PROGRAMMED,
-                    // 'Neighborhood Bikeway', colors.PROGRAMMED,
-                    // 'Shared Lane Markings', colors.PROGRAMMED,
-                    // 'Unknown', colors.PROGRAMMED,
-                    'grey'
-                ],
+                'line-color': colors.PROGRAMMED,
                 'line-width': [
                     'match',
                     ['get', 'Type'],
@@ -657,9 +661,6 @@
                     'Buffered Bike Lane/Shared Lane Markings', 2,
                     'Separated Bike Lane', 2,
                     'Multi-Use Path', 1.5,
-                    // 'Neighborhood Bikeway', 1.5,
-                    // 'Shared Lane Markings', 1.5,
-                    // 'Unknown', 1.5,
                     0
                 ]
             }
@@ -676,13 +677,6 @@
                 'line-color': [
                     'match',
                     ['get', 'Type'],
-                    // 'Bike Lane', colors.EXISTING,
-                    // 'Bike Lane/Shared Lane Markings', colors.EXISTING,
-                    // 'Buffered Bike Lane', colors.EXISTING,
-                    // 'Buffered Bike Lane/Bike Lane', colors.EXISTING,
-                    // 'Buffered Bike Lane/Shared Lane Markings', colors.EXISTING,
-                    // 'Separated Bike Lane', colors.EXISTING,
-                    // 'Multi-Use Path', colors.EXISTING,
                     'Neighborhood Bikeway', colors.PROGRAMMED,
                     'Shared Lane Markings', colors.PROGRAMMED,
                     'Unknown', colors.PROGRAMMED,
@@ -691,14 +685,7 @@
                 'line-width': [
                     'match',
                     ['get', 'Type'],
-                    // 'Bike Lane', 1.5,
-                    // 'Bike Lane/Shared Lane Markings', 1.5,
-                    // 'Buffered Bike Lane', 1.5,
-                    // 'Buffered Bike Lane/Bike Lane', 1.5,
-                    // 'Buffered Bike Lane/Shared Lane Markings', 1.5,
-                    // 'Separated Bike Lane', 1.5,
                     'Neighborhood Bikeway', 1.5,
-                    // 'Multi-Use Path', 1.5,
                     'Shared Lane Markings', 1.5,
                     'Unknown', 1.5,
                     0
@@ -735,42 +722,6 @@
                     0,
                 ],
             }
-        });
-
-        map.addLayer({
-            'id': layers.RALEIGH_GREENWAY_SYMBOL,
-            'type': 'symbol',
-            'source': sources.RALEIGH_GREENWAY,
-            'layout': {
-                'text-field': [
-                    'match',
-                    ['get', 'GWSTATUS'],
-                    "CLOSED_TEMP", "X",
-                    ""
-                ],
-                'symbol-placement': 'line-center',
-            },
-            'paint': {
-                'text-color': colors.GREENWAY_CLOSED_X,
-                'text-halo-width': 1,
-                'text-halo-color': 'black',
-            },
-        });
-
-        map.addLayer({
-            'id': layers.RALEIGH_GREENWAY_NAME,
-            'type': 'symbol',
-            'source': sources.RALEIGH_GREENWAY,
-            'layout': {
-                'text-field': ['get', 'TRAIL_NAME'],
-                'symbol-placement': 'line',
-                'text-size': 14,
-            },
-            'paint': {
-                'text-color': colors.GREENWAY,
-                'text-halo-width': 1,
-                'text-halo-color': 'black',
-            },
         });
 
         // We are using greenway width as a guess as to how bikable a section
@@ -883,6 +834,206 @@
             }
         });
 
+        map.addSource(sources.DURHAM_SOLID, {
+            'type': 'geojson',
+            'data': durhamSolidQuery
+        });
+
+        map.addLayer({
+            'id': layers.DURHAM_FACILITIES,
+            'type': 'line',
+            'source': sources.DURHAM_SOLID,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike_Facil'],
+                    'Multiuse Path', 0,
+                    1
+                ],
+            }
+        });
+
+        map.addLayer({
+            'id': layers.DURHAM_GREENWAY,
+            'type': 'line',
+            'source': sources.DURHAM_SOLID,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike_Facil'],
+                    'Multiuse Path', 1,
+                    0
+                ],
+            }
+        });
+
+        map.addSource(sources.DURHAM_DASHED, {
+            'type': 'geojson',
+            'data': durhamDashedQuery
+        });
+
+        map.addLayer({
+            'id': layers.DURHAM_FACILITIES_DASHED,
+            'type': 'line',
+            'source': sources.DURHAM_DASHED,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': 1.5,
+                'line-dasharray': [1, 2],
+            }
+        });
+
+        map.addSource(sources.MINGO_GREENWAY, {
+            'type': 'geojson',
+            'data': mingoGreenwayQuery
+        });
+
+        map.addLayer({
+            'id': layers.MINGO_GREENWAY,
+            'type': 'line',
+            'source': sources.MINGO_GREENWAY,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+            }
+        });
+
+        map.addSource(sources.SMITH_GREENWAY, {
+            'type': 'geojson',
+            'data': smithCreekGreenwayQuery
+        });
+
+        map.addLayer({
+            'id': layers.SMITH_GREENWAY,
+            'type': 'line',
+            'source': sources.SMITH_GREENWAY,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+            }
+        });
+
+        map.addSource(sources.CH_CARRBORO, {
+            'type': 'geojson',
+            'data': chCarrboroQuery
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_FACILITIES,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Bike Lane - both sides of road', 'Bike Lane - one side of road', 'Sidepath'], 1,
+                    0,
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_FACILITIES_DASHED,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.EXISTING,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Sharrow'], 1,
+                    0,
+                ],
+                'line-dasharray': [1, 2],
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_GREENWAY,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Greenway - Paved',], 1,
+                    0,
+                ]
+            }
+        });
+
+        map.addLayer({
+            'id': layers.CH_CARR_GREENWAY_DASHED,
+            'type': 'line',
+            'source': sources.CH_CARRBORO,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'match',
+                    ['get', 'Bike Facility'],
+                    ['Greenway - Unpaved', 'Gravel Path', 'Trail'], 1,
+                    0,
+                ],
+                'line-dasharray': [1, 2],
+            }
+        });
+
+        map.addSource(sources.CITRIX, {
+            'type': 'geojson',
+            'data': citrixCycleStationsQuery
+        });
+
+        /* ---------------------Add symbol layers last so they are on top----------------------- */
+        map.addLayer({
+            'id': layers.CITRIX,
+            'type': 'circle',
+            'source': sources.CITRIX,
+            'layout': {},
+            'paint': {
+                'circle-color': colors.CITRIX,
+                'circle-radius': 4,
+            }
+        });
+
+        map.addLayer({
+            'id': layers.RALEIGH_GREENWAY_SYMBOL,
+            'type': 'symbol',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {
+                'text-field': [
+                    'match',
+                    ['get', 'GWSTATUS'],
+                    "CLOSED_TEMP", "X",
+                    ""
+                ],
+                'symbol-placement': 'line-center',
+            },
+            'paint': {
+                'text-color': colors.GREENWAY_CLOSED_X,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
+        });
+
         map.addLayer({
             'id': layers.CARY_GREENWAY_NAME,
             'type': 'symbol',
@@ -899,20 +1050,52 @@
             },
         });
 
-        map.addSource(sources.CITRIX, {
-            'type': 'geojson',
-            'data': citrixCycleStationsQuery
+        map.addLayer({
+            'id': layers.RALEIGH_GREENWAY_NAME,
+            'type': 'symbol',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {
+                'text-field': ['get', 'TRAIL_NAME'],
+                'symbol-placement': 'line',
+                'text-size': 14,
+            },
+            'paint': {
+                'text-color': colors.GREENWAY,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
         });
 
         map.addLayer({
-            'id': layers.CITRIX,
-            'type': 'circle',
-            'source': sources.CITRIX,
-            'layout': {},
+            'id': layers.MINGO_GREENWAY_NAMES,
+            'type': 'symbol',
+            'source': sources.MINGO_GREENWAY,
+            'layout': {
+                'text-field': ['get', 'TRAIL_NAME'],
+                'symbol-placement': 'line',
+                'text-size': 14,
+            },
             'paint': {
-                'circle-color': colors.CITRIX,
-                'circle-radius': 4,
-            }
+                'text-color': colors.GREENWAY,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
+        });
+
+        map.addLayer({
+            'id': layers.SMITH_GREENWAY_NAMES,
+            'type': 'symbol',
+            'source': sources.SMITH_GREENWAY,
+            'layout': {
+                'text-field': ['get', 'Street'],
+                'symbol-placement': 'line',
+                'text-size': 14,
+            },
+            'paint': {
+                'text-color': colors.GREENWAY,
+                'text-halo-width': 1,
+                'text-halo-color': 'black',
+            },
         });
 
         map.resize();
@@ -923,6 +1106,48 @@
         var visibilityState = ele.checked ? 'visible' : 'none';
 
         map.setLayoutProperty(layerName, 'visibility', visibilityState);
+    }
+
+    function legendToggleGreenwayLayer(ele) {
+        var layerName = layerName || ele.name;
+        var visibilityState = ele.checked ? 'visible' : 'none';
+
+        map.setLayoutProperty(layers.RALEIGH_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CARY_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.MINGO_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.SMITH_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.DURHAM_GREENWAY, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_GREENWAY, 'visibility', visibilityState);
+    }
+
+    function legendToggleGreenwayDashedLayer(ele) {
+        var layerName = layerName || ele.name;
+        var visibilityState = ele.checked ? 'visible' : 'none';
+
+        map.setLayoutProperty(layers.RALEIGH_GREENWAY_DASHED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CARY_GREENWAY_DASHED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.UMSTEAD, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_GREENWAY_DASHED, 'visibility', visibilityState);
+    }
+
+    function legendToggleFacilitiesLayer(ele, layerName) {
+        var layerName = layerName || ele.name;
+        var visibilityState = ele.checked ? 'visible' : 'none';
+
+        map.setLayoutProperty(layers.EXISTING, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CARY_BIKES, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.DURHAM_FACILITIES, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_FACILITIES, 'visibility', visibilityState);
+    }
+
+    function legendToggleDashedFacilitiesLayer(ele, layerName) {
+        var layerName = layerName || ele.name;
+        var visibilityState = ele.checked ? 'visible' : 'none';
+
+        map.setLayoutProperty(layers.EXISTING_DASHED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CARY_BIKES_DASHED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.DURHAM_FACILITIES_DASHED, 'visibility', visibilityState);
+        map.setLayoutProperty(layers.CH_CARR_FACILITIES_DASHED, 'visibility', visibilityState);
     }
 
     function toggleDirectionSection() {
@@ -962,6 +1187,8 @@
                 };
             }, options);
     }
+
+
 
 </script>
 
