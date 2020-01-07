@@ -497,7 +497,9 @@
 
     // We split up solid & dashed for durham as otherwise we would be close to the ARCGIS 1000 item limit
     let durhamSolidQueryParams = queryString({
-        where: "Bike_Facil LIKE 'Multiuse Path' OR Bike_Facil LIKE 'Bicycle Lane' OR Bike_Facil LIKE 'Bicycle Lane - One Side'",
+        // We are filtering out Objectid_1 18 - 20 as they are repeats of the American Tobacco Trail
+        // and they block the fact that it is not paved
+        where: "(Bike_Facil LIKE 'Multiuse Path' OR Bike_Facil LIKE 'Bicycle Lane' OR Bike_Facil LIKE 'Bicycle Lane - One Side') AND (OBJECTID_1 < 18 OR OBJECTID_1 > 20)",
         outSR: 4326,
         outFields: "*",
         f: "geojson"
