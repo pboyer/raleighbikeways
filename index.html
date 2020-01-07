@@ -1112,7 +1112,7 @@
                 document.getElementById('programmed-checkbox').checked = false;
             }
         } else {
-            setCookie("hasOpened","true",365);
+            setCookie("hasOpened","true",1000);
             // We default the programmed bike infra to not show
             legendToggleProgrammedLayer(false);
         }
@@ -1122,7 +1122,7 @@
 
     function legendToggleGreenwayLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideGreenway",(!isChecked).toString());
+        setCookie("hideGreenway",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.RALEIGH_GREENWAY, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_GREENWAY, 'visibility', visibilityState);
@@ -1135,7 +1135,7 @@
 
     function legendToggleGreenwayDashedLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideGreenwayDashed",(!isChecked).toString());
+        setCookie("hideGreenwayDashed",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.RALEIGH_GREENWAY_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_GREENWAY_DASHED, 'visibility', visibilityState);
@@ -1145,14 +1145,14 @@
 
     function legendToggleGreenwayDetourLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideGreenwayDetour",(!isChecked).toString());
+        setCookie("hideGreenwayDetour",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.GREENWAY_DETOUR, 'visibility', visibilityState);
     }
 
     function legendToggleFacilitiesLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideFacilities",(!isChecked).toString());
+        setCookie("hideFacilities",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.EXISTING, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_BIKES, 'visibility', visibilityState);
@@ -1162,7 +1162,7 @@
 
     function legendToggleDashedFacilitiesLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideFacilitiesDashed",(!isChecked).toString());
+        setCookie("hideFacilitiesDashed",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.EXISTING_DASHED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.CARY_BIKES_DASHED, 'visibility', visibilityState);
@@ -1172,7 +1172,7 @@
 
     function legendToggleProgrammedLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideProgrammed",(!isChecked).toString());
+        setCookie("hideProgrammed",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.PROGRAMMED, 'visibility', visibilityState);
         map.setLayoutProperty(layers.PROGRAMMED_DASHED, 'visibility', visibilityState);
@@ -1180,7 +1180,7 @@
 
     function legendToggleCitrixLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
-        setCookie("hideCitrix",(!isChecked).toString());
+        setCookie("hideCitrix",(!isChecked).toString(),1000);
 
         map.setLayoutProperty(layers.CITRIX, 'visibility', visibilityState);
     }
