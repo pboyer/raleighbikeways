@@ -105,7 +105,7 @@ body {
 }
 
 #style-icon-container {
-    top: 32px;
+    top: 42px;
     right: 0px;
     margin: 10px;
     cursor: pointer;
@@ -172,9 +172,9 @@ body {
 /* This is to allow us to put the new icons over
 parts of the navigation control but not all.
 Otherwise the parent z-index makes things difficult */
-.mapboxgl-ctrl-top-left {
+/* .mapboxgl-ctrl-top-left {
     z-index: unset !important;
-}
+} */
 
 #existing {
     background: #eee;

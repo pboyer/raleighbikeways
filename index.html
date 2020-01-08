@@ -44,7 +44,7 @@
     <div id="info-icon-container" onclick="document.getElementById('info-box-container').style.display='block'">
         <i class="material-icons md-36 md-light black-border noselect">info</i>
     </div>
-    <div id="style-icon-container" onclick="setStyle()">
+    <div id="style-icon-container" onclick="document.getElementById('map-style-container').style.display='block'">
         <i class="material-icons md-36 md-light black-border noselect">layers</i>
     </div>
     <div id="direction-buttons" style="display: none;">
@@ -265,6 +265,25 @@
             <br>
         </div>
     </div>
+    <div id="map-style-container" class="modal-container" onclick="this.style.display='none'" style="display: none;">
+        <div id="map-style-selection" class="modal legend-info" onclick="event.stopPropagation()">
+            <i class=" material-icons md-24 noselect close-button"
+                onclick="document.getElementById('map-style-container').style.display='none'">close</i>
+            <div id="about">
+                <div class="legend-info-title">Map Style Selection</div>
+                    <input onclick="setStyle(this.id)" id="dark-v10" type="radio" name="rtoggle" value="dark" checked="checked"/>
+                    <label for="dark">dark</label>
+                    <input onclick="setStyle(this.id)" id="streets-v11" type="radio" name="rtoggle" value="streets"/>
+                    <label for="streets">streets</label>
+                    <input onclick="setStyle(this.id)" id="light-v10" type="radio" name="rtoggle" value="light" />
+                    <label for="light">light</label>
+                    <input onclick="setStyle(this.id)" id="outdoors-v11" type="radio" name="rtoggle" value="outdoors"/>
+                    <label for="outdoors">outdoors</label>
+                    <input onclick="setStyle(this.id)" id="satellite-v9" type="radio" name="rtoggle" value="satellite" />
+                    <label for="satellite">satellite</label>
+            </div>
+        </div>
+    </div>
     </div>
 
 </body>
@@ -279,7 +298,8 @@
         GREENWAY_CLOSED: '#CC0000',
         GREENWAY_CLOSED_X: '#FF0000',
         GREENWAY_DETOUR: 'yellow',
-        EXISTING: '#EEE',
+        //EXISTING: '#EEE',
+        EXISTING: '#F0F',
     }
 
     const layers = {
@@ -380,10 +400,19 @@
         ]
     }];
 
+    var mapStyle;
+    var savedStyle = getCookie("mapStyle");
+    if (savedStyle) {
+        mapStyle = savedStyle;
+        document.getElementById(savedStyle).checked = true;
+    } else {
+        setCookie("mapStyle","dark-v10",1000);
+        mapStyle = "dark-v10";
+    }
 
     let map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/peterboyer/cjr49i1ql0mza2srxxtgqlpqw',
+        style: 'mapbox://styles/mapbox/' + mapStyle,
         center: [-78.638176, 35.779591],
         zoom: 12
     });
@@ -530,14 +559,28 @@
     // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
     let chCarrboroQuery = 'https://gist.githubusercontent.com/jonathonwpowell/23679b5c11f8108bc1aecad157475a8f/raw/ch-carrboro-bike-facilities.geojson';
 
+    map.on('load', () => {
+        console.log('loaded at ' + (new Date).getTime());
+    })
+
+    function idled() {
+        console.log('idled at ' + (new Date).getTime());
+        map.off('idle',idled)
+    }
+
+    map.on('idle', idled)
+
+    //map.addControl(directionContol, 'top-left');
     map.on('style.load', () => {
 
-        // We need to re-add the directionControl on a style change or the line won't work
-        map.addControl(directionContol, 'top-left');
+        
 
         addMapSources();
 
         addMapLayers();
+
+        // We need to re-add the directionControl on a style change or the line won't work
+        map.addControl(directionContol, 'top-left');
 
         // After the map has started loading and all the layers have been added
         // we want to disable any layers the user previously removed
@@ -1197,14 +1240,20 @@
         map.setLayoutProperty(layers.CITRIX, 'visibility', visibilityState);
     }
 
-    function setStyle() {
+    function setStyle(layerId) {
+        var currentStyle = getCookie("mapStyle");
+        if (layerId === currentStyle) return;
+
         // We need to remove the direction control before the style changes or it will break
         if (showingDirectionsSection) {
             toggleDirectionSection();
         }
         directionContol.removeRoutes();
         map.removeControl(directionContol);
-        map.setStyle("mapbox://styles/mapbox/light-v10");
+        
+        setCookie("mapStyle",layerId,1000);
+        map.setStyle('mapbox://styles/mapbox/' + layerId);
+        //map.addControl(directionContol, 'top-left');
     }
 
     function toggleDirectionSection() {
