@@ -491,12 +491,12 @@
         f: "geojson"
     });
 
-    let durhamDashedQueryParams = queryString({
-        where: "Bike_Facil LIKE 'Shared Roadway'",
-        outSR: 4326,
-        outFields: "*",
-        f: "geojson"
-    });
+    // let durhamDashedQueryParams = queryString({
+    //     where: "Bike_Facil LIKE 'Shared Roadway'",
+    //     outSR: 4326,
+    //     outFields: "*",
+    //     f: "geojson"
+    // });
 
     // Some other data is in here, we only want the mingo creek greenway
     let mingoGreenwayQueryParams = queryString({
@@ -525,7 +525,8 @@
     let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson';
     let umsteadQuery = `${umsteadURL}/query?${queryParams}`;
     let durhamSolidQuery = 'data/osm_durham.geojson';
-    let durhamDashedQuery = `${durhamURL}/query?${durhamDashedQueryParams}`;
+    let durhamDashedQuery = 'data/durham_shared.geojson';
+    // let durhamDashedQuery = `${durhamURL}/query?${durhamDashedQueryParams}`;
     let mingoGreenwayQuery = `${mingoGreenwayURL}/query?${mingoGreenwayQueryParams}`;
     let smithCreekGreenwayQuery = `${smithCreekGreenwayURL}/query?${queryParams}`;
     // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
