@@ -1,12 +1,16 @@
-// https://developers.google.com/web/fundamentals/primers/service-workers/
-
 var CACHE_NAME = "bikeways-cache-v1";
 var urlsToCache = [
     '/',
+    '/styles.css',
     '/data/caryFacilities.geojson',
     '/data/caryGreenways.geojson',
     '/data/durham_shared.geojson',
-    '/data/osm_data.geojson'
+    '/data/osm_durham.geojson',
+    '/img/bike_lane.jpg',
+    '/img/citrix.jpg',
+    '/img/marginal-greenway-1.jpg',
+    '/img/marginal-greenway-2.jpg',
+    '/img/sidepath.jpg',
 ];
 
 self.addEventListener('install', function (event) {
