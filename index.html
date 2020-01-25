@@ -15,13 +15,14 @@
         type="text/css" />
 
     <!-- Flavicon Metadata -->
-    <link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=xQOgA4Byaj">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=xQOgA4Byaj">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=xQOgA4Byaj">
+    <link rel="manifest" href="/site.webmanifest?v=xQOgA4Byaj">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg?v=xQOgA4Byaj" color="#0b6623">
+    <link rel="shortcut icon" href="/favicon.ico?v=xQOgA4Byaj">
+    <meta name="msapplication-TileColor" content="#343323">
+    <meta name="theme-color" content="#343323">
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-142487885-3"></script>
@@ -292,7 +293,19 @@
 </body>
 
 <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJib3llciIsImEiOiJjanF5aHpuYXAwMGhvNDl0MmRkN3F2cHpxIn0.cdJjFtN1PHLcMZTlGC1WNg'
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').then(function (registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function (err) {
+                // registration failed :(
+                console.warn('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+
+    mapboxgl.accessToken = 'pk.eyJ1Ijoib2Frc2FuZHNwb2tlcyIsImEiOiJjazR1M2Ztc3cwZXl2M21ub3p6eXF3b2txIn0.BNI4-QbP-094byFujTJAuQ'
 
     const colors = {
         CITRIX: '#f9423a',
@@ -413,12 +426,29 @@
         mapStyle = "dark-v10";
     }
 
+    var lastCameraLng = getCookie("lastCameraLng");
+    var lastCameraLat = getCookie("lastCameraLat");
+    var lastZoom = getCookie("lastZoom") || 12;
+    if (!lastCameraLng || !lastCameraLat) {
+        lastCameraLng = "-78.638176";
+        lastCameraLat = "35.779591"
+        setCookie("lastCameraLng", lastCameraLng, 1000);
+        setCookie("lastCameraLat", lastCameraLat, 1000);
+    }
+
     let map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/' + mapStyle,
-        center: [-78.638176, 35.779591],
-        zoom: 12
+        center: [lastCameraLng, lastCameraLat],
+        zoom: lastZoom
     });
+
+    map.on('idle', () => {
+        var mapCenter = map.getCenter();
+        setCookie("lastCameraLng", mapCenter.lng, 1000);
+        setCookie("lastCameraLat", mapCenter.lat, 1000);
+        setCookie("lastZoom", map.getZoom(), 1000);
+    })
 
     map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
@@ -474,8 +504,8 @@
 
     // REST endpoint for a dataset published to an ArcGIS Server. In this case, it was published to an ArcGIS Online ArcGIS Server 
     let existingRaleighGreenwaysURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Greenway_Trails_All/FeatureServer/0';
-    let caryGreenwaysURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/17';
-    let caryBikeURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/16';
+    // let caryGreenwaysURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/17';
+    // let caryBikeURL = 'https://maps.townofcary.org/arcgis1/rest/services/OpenData/MapServer/16';
     let existingBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Existing_Bike_Facilities/FeatureServer/6';
     let programmedBikeFacilities = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/Programmed_Bike_Facilities/FeatureServer/6';
     let citrixCycleStations = 'https://services.arcgis.com/v400IkDOw1ad7Yad/arcgis/rest/services/Citrix_Cycle_Stations/FeatureServer/0';
@@ -493,19 +523,19 @@
         f: "geojson"
     });
 
-    let caryGreenwayQueryParams = queryString({
-        where: "STATUS LIKE 'EXISTING'",
-        outSR: 4326,
-        outFields: "*",
-        f: "geojson"
-    });
+    // let caryGreenwayQueryParams = queryString({
+    //     where: "STATUS LIKE 'EXISTING'",
+    //     outSR: 4326,
+    //     outFields: "*",
+    //     f: "geojson"
+    // });
 
-    let caryBikeQueryParams = queryString({
-        where: "STATUS LIKE 'EXISTING'",
-        outSR: 4326,
-        outFields: "*",
-        f: "geojson"
-    });
+    // let caryBikeQueryParams = queryString({
+    //     where: "STATUS LIKE 'EXISTING'",
+    //     outSR: 4326,
+    //     outFields: "*",
+    //     f: "geojson"
+    // });
 
     let citrixQueryParams = queryString({
         where: "status LIKE 'open'",
@@ -524,12 +554,12 @@
         f: "geojson"
     });
 
-    let durhamDashedQueryParams = queryString({
-        where: "Bike_Facil LIKE 'Shared Roadway'",
-        outSR: 4326,
-        outFields: "*",
-        f: "geojson"
-    });
+    // let durhamDashedQueryParams = queryString({
+    //     where: "Bike_Facil LIKE 'Shared Roadway'",
+    //     outSR: 4326,
+    //     outFields: "*",
+    //     f: "geojson"
+    // });
 
     // Some other data is in here, we only want the mingo creek greenway
     let mingoGreenwayQueryParams = queryString({
@@ -548,15 +578,18 @@
 
     // Generate the full query URL
     let existingRaleighGreenwaysQuery = `${existingRaleighGreenwaysURL}/query?${queryParams}`;
-    let caryGreenwaysQuery = `${caryGreenwaysURL}/query?${caryGreenwayQueryParams}`;
-    let caryBikeQuery = `${caryBikeURL}/query?${caryBikeQueryParams}`;
+    // let caryGreenwaysQuery = `${caryGreenwaysURL}/query?${caryGreenwayQueryParams}`;
+    let caryGreenwaysQuery = `data/caryGreenways.geojson`;
+    // let caryBikeQuery = `${caryBikeURL}/query?${caryBikeQueryParams}`;
+    let caryBikeQuery = `data/caryFacilities.geojson`;
     let existingBikeFacilitiesQuery = `${existingBikeFacilities}/query?${queryParams}`;
     let programmedBikeFacilitiesQuery = `${programmedBikeFacilities}/query?${queryParams}`;
     let citrixCycleStationsQuery = `${citrixCycleStations}/query?${citrixQueryParams}`;
     let greenwayDetourQuery = 'https://gist.githubusercontent.com/jonathonwpowell/51172dccc17cf8a832ff6566e700c2d8/raw/map.geojson';
     let umsteadQuery = `${umsteadURL}/query?${queryParams}`;
-    let durhamSolidQuery = `${durhamURL}/query?${durhamSolidQueryParams}`;
-    let durhamDashedQuery = `${durhamURL}/query?${durhamDashedQueryParams}`;
+    let durhamSolidQuery = 'data/osm_durham.geojson';
+    let durhamDashedQuery = 'data/durham_shared.geojson';
+    // let durhamDashedQuery = `${durhamURL}/query?${durhamDashedQueryParams}`;
     let mingoGreenwayQuery = `${mingoGreenwayURL}/query?${mingoGreenwayQueryParams}`;
     let smithCreekGreenwayQuery = `${smithCreekGreenwayURL}/query?${queryParams}`;
     // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
@@ -951,12 +984,23 @@
             'paint': {
                 'line-color': colors.EXISTING,
                 'line-width': 1.5,
-                'line-opacity': [
-                    'match',
-                    ['get', 'Bike_Facil'],
-                    'Multiuse Path', 0,
-                    1
-                ],
+                'line-opacity': ['case',
+                    ['any',
+                        ['match',
+                            ['get', 'cycleway'],
+                            'lane', true, false],
+                        ['match',
+                            ['get', 'cycleway:left'],
+                            'lane', true, false],
+                        ['match',
+                            ['get', 'cycleway:right'],
+                            'lane', true, false],
+                        ['match',
+                            ['get', 'cycleway'],
+                            'track', true, false]
+                    ],
+                    1,
+                    0]
             }
         });
 
@@ -968,10 +1012,16 @@
             'paint': {
                 'line-color': colors.GREENWAY,
                 'line-width': 1.5,
-                'line-opacity': [
-                    'match',
-                    ['get', 'Bike_Facil'],
-                    'Multiuse Path', 1,
+                'line-opacity': ['case',
+                    ['any',
+                        ['match',
+                            ['get', 'highway'],
+                            'cycleway', true, false],
+                        ['match',
+                            ['get', 'bicycle'],
+                            'designated', true, false],
+                    ],
+                    1,
                     0
                 ],
             }
@@ -1176,7 +1226,47 @@
                 'text-halo-color': 'black',
             },
         });
-    }
+
+        // After the map has started loading and all the layers have been added
+        // we want to disable any layers the user previously removed
+        if (getCookie("hasOpened")) {
+            if (getCookie("hideGreenway") === "true") {
+                legendToggleGreenwayLayer(false);
+                document.getElementById('greenway-checkbox').checked = false;
+            }
+            if (getCookie("hideGreenwayDashed") === "true") {
+                legendToggleGreenwayDashedLayer(false);
+                document.getElementById('greenway-dashed-checkbox').checked = false;
+            }
+            if (getCookie("hideGreenwayDetour") === "true") {
+                legendToggleGreenwayDetourLayer(false);
+                document.getElementById('greenway-detour-checkbox').checked = false;
+            }
+            if (getCookie("hideFacilities") === "true") {
+                legendToggleFacilitiesLayer(false);
+                document.getElementById('facilities-checkbox').checked = false;
+            }
+            if (getCookie("hideFacilitiesDashed") === "true") {
+                legendToggleDashedFacilitiesLayer(false);
+                document.getElementById('facilities-dashed-checkbox').checked = false;
+            }
+            if (getCookie("hideCitrix") === "true") {
+                legendToggleCitrixLayer(false);
+                document.getElementById('citrix-checkbox').checked = false;
+            }
+            if (getCookie("hideProgrammed") === "true") {
+                legendToggleProgrammedLayer(false);
+                document.getElementById('programmed-checkbox').checked = false;
+            }
+        } else {
+            setCookie("hasOpened", "true", 1000);
+            // We default the programmed bike infra to not show
+            legendToggleProgrammedLayer(false);
+            document.getElementById('programmed-checkbox').checked = false;
+        }
+
+        map.resize();
+    });
 
     function legendToggleGreenwayLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
