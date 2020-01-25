@@ -129,6 +129,13 @@ body {
     cursor: pointer;
 }
 
+#map-style-selection input {
+    transform: scale(1.5);
+    margin-right: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
 #feedback-button-container {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -225,13 +232,13 @@ Otherwise the parent z-index makes things difficult */
 }
 
 .greenway-detour-legend {
-    stroke: yellow;
+    stroke: #ff6600;
     stroke-width: 8;
     padding-top: 5px;
 }
 
 .existing-legend {
-    stroke: #eee;
+    stroke: #bd35bd;
     stroke-width: 8;
     padding-top: 5px;
 }
