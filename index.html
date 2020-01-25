@@ -595,21 +595,7 @@
     // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
     let chCarrboroQuery = 'https://gist.githubusercontent.com/jonathonwpowell/23679b5c11f8108bc1aecad157475a8f/raw/ch-carrboro-bike-facilities.geojson';
 
-    map.on('load', () => {
-        console.log('loaded at ' + (new Date).getTime());
-    })
-
-    function idled() {
-        console.log('idled at ' + (new Date).getTime());
-        map.off('idle', idled)
-    }
-
-    map.on('idle', idled)
-
-    //map.addControl(directionContol, 'top-left');
     map.on('style.load', () => {
-
-
 
         addMapSources();
 
@@ -1227,46 +1213,7 @@
             },
         });
 
-        // After the map has started loading and all the layers have been added
-        // we want to disable any layers the user previously removed
-        if (getCookie("hasOpened")) {
-            if (getCookie("hideGreenway") === "true") {
-                legendToggleGreenwayLayer(false);
-                document.getElementById('greenway-checkbox').checked = false;
-            }
-            if (getCookie("hideGreenwayDashed") === "true") {
-                legendToggleGreenwayDashedLayer(false);
-                document.getElementById('greenway-dashed-checkbox').checked = false;
-            }
-            if (getCookie("hideGreenwayDetour") === "true") {
-                legendToggleGreenwayDetourLayer(false);
-                document.getElementById('greenway-detour-checkbox').checked = false;
-            }
-            if (getCookie("hideFacilities") === "true") {
-                legendToggleFacilitiesLayer(false);
-                document.getElementById('facilities-checkbox').checked = false;
-            }
-            if (getCookie("hideFacilitiesDashed") === "true") {
-                legendToggleDashedFacilitiesLayer(false);
-                document.getElementById('facilities-dashed-checkbox').checked = false;
-            }
-            if (getCookie("hideCitrix") === "true") {
-                legendToggleCitrixLayer(false);
-                document.getElementById('citrix-checkbox').checked = false;
-            }
-            if (getCookie("hideProgrammed") === "true") {
-                legendToggleProgrammedLayer(false);
-                document.getElementById('programmed-checkbox').checked = false;
-            }
-        } else {
-            setCookie("hasOpened", "true", 1000);
-            // We default the programmed bike infra to not show
-            legendToggleProgrammedLayer(false);
-            document.getElementById('programmed-checkbox').checked = false;
-        }
-
-        map.resize();
-    });
+    }
 
     function legendToggleGreenwayLayer(isChecked) {
         var visibilityState = isChecked ? 'visible' : 'none';
@@ -1346,7 +1293,6 @@
 
         setCookie("mapStyle", layerId, 1000);
         map.setStyle('mapbox://styles/mapbox/' + layerId);
-        //map.addControl(directionContol, 'top-left');
     }
 
     function toggleDirectionSection() {
