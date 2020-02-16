@@ -603,7 +603,7 @@
     let smithCreekGreenwayQuery = `${smithCreekGreenwayURL}/query?${queryParams}`;
     // let chCarrboroQuery = `${chCarrboroURL}/query?${chCarrboroQueryParams}`;
     let chCarrboroQuery = 'https://gist.githubusercontent.com/jonathonwpowell/23679b5c11f8108bc1aecad157475a8f/raw/ch-carrboro-bike-facilities.geojson';
-    let osmQuery = 'https://triangle-bike-data-osm.netlify.com/bikeInfra.geojson';
+    let osmQuery = 'https://raw.githubusercontent.com/oaksandspokes/bikeOsmExport/master/bikeInfra.geojson';
 
 
     map.on('style.load', () => {
@@ -1044,6 +1044,7 @@
             'paint': {
                 'line-color': colors.GREENWAY,
                 'line-width': 1.5,
+                'line-dasharray': [1, 2],
                 'line-opacity': ['case',
                     ['all',
                         ['any',
