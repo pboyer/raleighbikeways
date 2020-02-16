@@ -1079,6 +1079,24 @@
             }
         });
 
+
+        map.addLayer({
+            'id': layers.RALEIGH_GREENWAY,
+            'type': 'line',
+            'source': sources.RALEIGH_GREENWAY,
+            'layout': {},
+            'paint': {
+                'line-color': colors.GREENWAY_CLOSED,
+                'line-width': 1.5,
+                'line-opacity': [
+                    'case',
+                    ["match", ["get", "GWSTATUS"], ["CLOSED_TEMP"], true, false],
+                    1,
+                    0,
+                ],
+            }
+        });
+
         // map.addLayer({
         //     'id': layers.MINGO_GREENWAY,
         //     'type': 'line',
