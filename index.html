@@ -692,7 +692,12 @@
             'layout': {},
             'paint': {
                 'line-color': colors.PROGRAMMED,
-                'line-width': 2,
+                'line-width': [
+                    'match',
+                    ['get', 'Type'],
+                    ['Bike Lane', 'Separated Bike Lane', 'Buffered Bike Lane', 'Buffered Bike Lane/Bike Lane', 'Multi-Use Path'], 2,
+                    0
+                ]
             }
         });
 
