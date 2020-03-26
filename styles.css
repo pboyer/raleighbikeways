@@ -7,22 +7,22 @@ body {
 
 #map {
     position: absolute;
-    top: 75px;
+    top: 0px;
     bottom: 0px;
     width: 100%;
 }
 
-#header {
+/* #header {
     position: flex;
     top: 0;
-    height: 75px;
+    height: 50px;
     width: 100%;
     background: whitesmoke;
-}
+} */
 
 #title {
     display: inline-block;
-    padding: 20px 0px 20px 10px;
+    padding: 10px 0px 10px 10px;
     font-size: 28px;
 }
 
@@ -71,71 +71,75 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 10;
-    top: 0px
+    z-index: 11;
+    top: 0px;
+    background-color: rgba(0, 0, 0, 0.54);
 }
 
 .modal {
     position: relative;
     margin: 0 auto;
-    z-index: 10;
+    z-index: 12;
     padding: 10px;
-}
-
-#info-icon {
-    float: right;
-    cursor: pointer;
-    color: #444;
-    padding: 17px 4px 17px 4px;
-}
-
-#info-box {
-    background-color: #2c2c2c;
-    top: 100px;
-    width: 60%;
-}
-
-#info-box {
-    color: white;
-    font-size: 14px;
-}
-
-#info-box a {
-    color: white;
-}
-
-#info-box a:hover {
-    color: #000;
-}
-
-#legend-icon-container {
-    width: fit-content;
-    float: right;
-    cursor: pointer;
-    padding: 17px 8px 17px 8px;
-}
-
-#legend-icon-container > i {
-    cursor: pointer;
-}
-
-#legend-box {
+    background-color: gray;
+    top: 30px;
     width: fit-content;
     height: fit-content;
-    background-color: gray;
     font-size: 16px;
-    top: 150px;
 }
 
-#legend-box td {
+.modal img {
+    padding: 5px;
+    padding-top: 15px;
+    max-width: 95%;
+}
+
+#info-icon-container {
+    top: 0px;
+    right: 0px;
+    margin: 10px;
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    width: fit-content;
+}
+
+#style-icon-container {
+    top: 42px;
+    right: 0px;
+    margin: 10px;
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    width: fit-content;
+}
+
+#info-box table {
+    padding-top: 10px;
+}
+
+#info-box td {
     padding-bottom: 10px;
     padding-left: 10px;
 }
 
-#legend-box .legend-checkbox{
+#info-box .legend-checkbox {
     transform: scale(1.5);
     margin-right: 20px;
     cursor: pointer;
+}
+
+#map-style-selection input {
+    transform: scale(1.5);
+    margin-right: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#feedback-button-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .mapboxgl-ctrl-directions {
@@ -145,17 +149,39 @@ body {
 #direction-buttons {
     position: relative;
     z-index: 5;
-    margin-top: 95px;
-    margin-left: 200px;
+    margin-top: 98px;
+    margin-left: 220px;
     width: fit-content;
 }
 
 #show-directions-container {
     position: relative;
     z-index: 5;
-    margin: 30px;
+    margin: 10px;
     width: fit-content;
 }
+
+#show-directions-container > span {
+    color: white;
+    padding-left: 7px;
+}
+
+.legend-info {
+    max-width: 700px;
+}
+
+.legend-info-title {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+/* This is to allow us to put the new icons over
+parts of the navigation control but not all.
+Otherwise the parent z-index makes things difficult */
+/* .mapboxgl-ctrl-top-left {
+    z-index: unset !important;
+} */
 
 #existing {
     background: #eee;
@@ -175,22 +201,23 @@ body {
 }
 
 .mapboxgl-ctrl-group > button{
-    width: 40px !important;
-    height: 40px !important;
+    width: 30px !important;
+    height: 30px !important;
 }
 
 .mapboxgl-ctrl-geolocate > button{
-    width: 40px !important;
-    height: 40px !important;
+    width: 30px !important;
+    height: 30px !important;
 }
 
 .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-group {
-    margin: 0 30px 30px 0 !important;
+    /* margin: 0 20px 20px 0 !important; */
+    margin-bottom: 20px !important;
 }
 
-.mapboxgl-ctrl-top-right .mapboxgl-ctrl {
+/* .mapboxgl-ctrl-top-right .mapboxgl-ctrl {
     margin: 30px 30px 0 0 !important;
-}
+} */
 
 .greenway-legend {
     stroke: #28B463;
@@ -198,15 +225,20 @@ body {
     padding-top: 5px;
 }
 
+.greenway-closed-legend {
+    stroke: #CC0000;
+    stroke-width: 8;
+    padding-top: 5px;
+}
 
 .greenway-detour-legend {
-    stroke: yellow;
+    stroke: #ff6600;
     stroke-width: 8;
     padding-top: 5px;
 }
 
 .existing-legend {
-    stroke: #eee;
+    stroke: #bd35bd;
     stroke-width: 8;
     padding-top: 5px;
 }
@@ -235,4 +267,30 @@ body {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome, Opera and Firefox */
+}
+
+.black-border {
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.close-button {
+    float: right;
+}
+
+.button {
+    background-color: Crimson;  
+    border-radius: 5px;
+    color: white;
+    padding: .5em;
+    text-decoration: none;
+}
+  
+.button:focus,
+.button:hover {
+    background-color: FireBrick;
+    color: White;
 }
